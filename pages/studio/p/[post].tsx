@@ -42,8 +42,10 @@ export const getServerSideProps: GetServerSideProps<PostEditorProps> = async (
   return {
     props: {
       initialEditorContent: {
-        content: [{ text: "", type: "paragraph" }],
+        content: [{ text: "", type: "paragraph", author: "", imgSrc: "" }],
         headline: docData.metadata.headline,
+        coverImage: { coverImageCaption: "", coverImageUrl: "" },
+        summary: "",
       },
       postId: post || "",
     },
