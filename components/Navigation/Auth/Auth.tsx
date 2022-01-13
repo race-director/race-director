@@ -1,5 +1,6 @@
 import { getAuth, signOut } from "firebase/auth";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { Auth as AuthContext, DarkMode } from "../../../pages/_app";
@@ -30,11 +31,9 @@ const Auth: React.FC<AuthProps> = () => {
               onClick={() => setExpandedMenuState(!expandedMenuState)}
               className="flex space-x-0 items-center justify-center"
             >
-              <img
-                className="rounded-full h-8 w-8 border-2 dark:border-zinc-200/80 border-zinc-700/80"
-                src={photoUrl}
-                alt="Profile"
-              />
+              <div className="rounded-full h-8 w-8 border-2 dark:border-zinc-200/80 border-zinc-700/80 overflow-hidden">
+                <Image height={32} width={32} src={photoUrl} alt="Profile" />
+              </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24px"
@@ -62,11 +61,14 @@ const Auth: React.FC<AuthProps> = () => {
                       <div className="grid gap-4">
                         <Link href={`/u/${user.uid}`}>
                           <a className="flex items-center space-x-3 cursor-pointer dark:hover:bg-zinc-700 hover:bg-zinc-200 px-4 py-2 rounded-md transition-colors">
-                            <img
-                              className="rounded-full border-2 dark:border-zinc-200/80 border-zinc-700/80 h-12 w-12"
-                              src={photoUrl}
-                              alt="Profile"
-                            />
+                            <div className="rounded-full border-2 dark:border-zinc-200/80 border-zinc-700/80 h-12 w-12 overflow-hidden">
+                              <Image
+                                height={48}
+                                width={48}
+                                src={photoUrl}
+                                alt="Profile"
+                              />
+                            </div>
                             <p className="uppercase tracking-tighter dark:text-zinc-100/90 text-zinc-800/80 font-semibold">
                               {user.displayName}
                             </p>

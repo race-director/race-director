@@ -2,10 +2,11 @@ import { doc, getDoc, getFirestore } from "firebase/firestore";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import React from "react";
 import { Navigation } from "../../components/Navigation";
+import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
 import { post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
 import { toTitleCase } from "../../utils/other";
@@ -17,10 +18,6 @@ interface PostPageProps {
 }
 
 const PostPage: React.FC<PostPageProps> = ({ post, markdown, author }) => {
-  useEffect(() => {
-    console.log(post, markdown);
-  }, []);
-
   return (
     <>
       {post ? (
@@ -30,12 +27,13 @@ const PostPage: React.FC<PostPageProps> = ({ post, markdown, author }) => {
           </Head>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen">
             <Navigation></Navigation>
-            <div className="relative">
-              <img
-                className="w-full max-w-4xl z-0 aspect-video object-cover"
+            <div className="relative w-full max-w-4xl z-0 aspect-video">
+              <Image
+                layout="fill"
+                className="object-cover"
                 src={post.coverImage.coverImageUrl}
-                alt={post.coverImage.coverImageUrl}
-              ></img>
+                alt={post.coverImage.coverImageCaption}
+              ></Image>
               <figcaption className="absolute top-full right-0 -translate-y-10 bg-zinc-200/80 dark:bg-black/60 px-4 py-2 rounded-tl-md dark:text-zinc-200 text-zinc-900 italic">
                 - {post.coverImage.coverImageCaption}
               </figcaption>
@@ -50,10 +48,13 @@ const PostPage: React.FC<PostPageProps> = ({ post, markdown, author }) => {
                   <Link href={`/u/${author.uid}`}>
                     <a>
                       <div className="flex space-x-4 not-prose items-center">
-                        <img
-                          className="rounded-full h-16 w-16"
-                          src={author.photoURL}
-                        ></img>
+                        <Image
+                          alt="Author Profile"
+                          className="rounded-full"
+                          width={64}
+                          height={64}
+                          src={author.photoURL || FALLBACK_PHOTO_URL}
+                        ></Image>
                         <div>
                           <p className="font-bold">{author.displayName}</p>
                           <div className="text-base flex space-x-2">

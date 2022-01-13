@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Navigation } from "../components/Navigation";
 import { firebaseApp } from "../utils/firebase";
+import Image from "next/image";
 
 export default function Home() {
   const postsQ = query(
@@ -34,11 +35,15 @@ export default function Home() {
                 <Link href={`/p/${posts[0].id}`}>
                   <a>
                     <div className="lg:h-[36rem] h-[20rem] md:h-[30rem] relative">
-                      <img
-                        src={posts[0].coverImage.coverImageUrl}
-                        className="h-full w-full object-cover"
-                      ></img>
-                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-bl from-transparent to-black/80 top-0">
+                      <div className="h-full w-full object-cover overflow-hidden">
+                        <Image
+                          alt={posts[0].coverImage.coverImageCaption}
+                          src={posts[0].coverImage.coverImageUrl}
+                          layout="fill"
+                          className="object-cover"
+                        ></Image>
+                      </div>
+                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
                         <h1 className="lg:text-5xl md:text-4xl text-3xl font-black text-zinc-100">
                           {posts[0].metadata.headline}
                         </h1>
@@ -54,11 +59,15 @@ export default function Home() {
                 <Link href={`/p/${posts[1].id}`}>
                   <a className="">
                     <div className="h-full w-full relative">
-                      <img
-                        src={posts[1].coverImage.coverImageUrl}
-                        className="h-full w-full object-cover"
-                      ></img>
-                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-bl from-transparent to-black/80 top-0">
+                      <div className="h-full w-full object-cover overflow-hidden">
+                        <Image
+                          alt={posts[1].coverImage.coverImageCaption}
+                          src={posts[1].coverImage.coverImageUrl}
+                          className="object-cover"
+                          layout="fill"
+                        ></Image>
+                      </div>
+                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
                         <h1 className="lg:text-2xl md:text-2xl text-xl font-black text-zinc-100">
                           {posts[1].metadata.headline}
                         </h1>
@@ -73,11 +82,15 @@ export default function Home() {
                 <Link href={`/p/${posts[2].id}`}>
                   <a className="">
                     <div className="h-full w-full relative">
-                      <img
-                        src={posts[2].coverImage.coverImageUrl}
-                        className="h-full w-full object-cover"
-                      ></img>
-                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-bl from-transparent to-black/80 top-0">
+                      <div className="h-full w-full object-cover overflow-hidden">
+                        <Image
+                          alt={posts[2].coverImage.coverImageCaption}
+                          src={posts[2].coverImage.coverImageUrl}
+                          className="object-cover"
+                          layout="fill"
+                        ></Image>
+                      </div>
+                      <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
                         <h1 className="lg:text-2xl md:text-2xl text-xl font-black text-zinc-100">
                           {posts[2].metadata.headline}
                         </h1>
