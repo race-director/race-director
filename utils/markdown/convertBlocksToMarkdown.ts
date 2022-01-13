@@ -5,7 +5,7 @@ const convertBlocksToMarkDown = (
   h: string,
   blocks: block[]
 ): [File, string] => {
-  let markdownStr = `# ${h}\n\n`;
+  let markdownStr = "";
 
   blocks.forEach((block) => {
     if (block.type === "paragraph") {

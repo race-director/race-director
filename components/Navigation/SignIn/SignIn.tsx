@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { user } from "../../../types";
 import { firebaseApp } from "../../../utils/firebase";
+import { FALLBACK_PHOTO_URL } from "../Auth/Auth";
 
 interface SignInProps {
   signInState: [
@@ -47,7 +48,12 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
     const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
     await setDoc(
       userRef,
-      { email: email, uid: user.uid, displayName: username } as user,
+      {
+        email: email,
+        uid: user.uid,
+        displayName: username,
+        photoURL: FALLBACK_PHOTO_URL,
+      } as user,
       { merge: true }
     );
 

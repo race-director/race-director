@@ -9,7 +9,7 @@ import { firebaseApp } from "../utils/firebase";
 import { userPrefersDarkMode } from "../utils/other";
 
 export const Auth = createContext<[user, boolean]>([null, true]);
-export const DarkMode = createContext<() => void>(() => {});
+export const DarkMode = createContext<[() => void, boolean]>([() => {}, true]);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading] = useFirebaseUser(firebaseApp);
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Auth.Provider value={[user, loading]}>
-      <DarkMode.Provider value={toggleDarkMode}>
+      <DarkMode.Provider value={[toggleDarkMode, darkMode]}>
         <div className={`${darkMode && "dark"}`}>
           <Head>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
