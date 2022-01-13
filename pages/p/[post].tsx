@@ -1,10 +1,13 @@
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import parseMD from "parse-md";
 import React from "react";
+import { post } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { toTitleCase } from "../../utils/other";
 
 type metadata = {
   title: string;
@@ -12,17 +15,18 @@ type metadata = {
 };
 
 interface PostPageProps {
-  content: string | null;
-  metadata: metadata;
+  post: post;
+  markdown: string;
 }
 
-const PostPage: React.FC<PostPageProps> = ({ content, metadata }) => {
+const PostPage: React.FC<PostPageProps> = ({ post, markdown }) => {
+  const { metadata } = post;
   return (
     <div>
       <Head>
-        <title>{metadata.title}</title>
+        <title>{toTitleCase(metadata.headline)}</title>
       </Head>
-      {content && (
+      {markdown && (
         <Markdown
           options={{
             wrapper: ({ children }) => (
@@ -32,12 +36,9 @@ const PostPage: React.FC<PostPageProps> = ({ content, metadata }) => {
                 </div>
               </div>
             ),
-            overrides: {
-              img: () => <></>,
-            },
           }}
         >
-          {content}
+          {markdown}
         </Markdown>
       )}
     </div>
@@ -48,6 +49,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
   c
 ) => {
   let post: string | null = null;
+  // Handle params edge cases
   if (c.params?.post) {
     if (typeof c.params.post === "string") {
       post = c.params.post;
@@ -56,17 +58,16 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
     }
   }
 
-  const storage = getStorage(firebaseApp);
-  const pathReference = ref(storage, `test-files/${post}.md`);
-  const downloadUrl = await getDownloadURL(pathReference);
-  const res = await fetch(downloadUrl);
-
-  const { content, metadata } = parseMD(await res.text());
+  const db = getFirestore(firebaseApp);
+  const docRef = doc(db, "posts", post || "");
+  const docRes = await getDoc(docRef);
+  const docData = docRes.data() as post;
+  const markdown = await (await fetch(docData.markdownUrl)).text();
 
   return {
     props: {
-      content: content,
-      metadata: metadata as metadata,
+      post: docData,
+      markdown: markdown,
     },
   };
 };
