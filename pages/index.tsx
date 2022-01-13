@@ -29,11 +29,11 @@ export default function Home() {
       <div className="max-w-7xl w-full flex flex-col">
         {!loading && (
           <div className="grid lg:grid-cols-8 lg:grid-rows-2 grid-rows-1 grid-cols-2">
-            <div className="object-cover lg:col-span-5 col-span-5 lg:row-span-2 row-span-1">
+            <div className="lg:col-span-5 col-span-5 lg:row-span-2 row-span-1">
               {posts && posts[0] && (
                 <Link href={`/p/${posts[0].id}`}>
-                  <a className="">
-                    <div className="h-full w-full relative">
+                  <a>
+                    <div className="lg:h-[36rem] h-[20rem] md:h-[30rem] relative">
                       <img
                         src={posts[0].coverImage.coverImageUrl}
                         className="h-full w-full object-cover"
