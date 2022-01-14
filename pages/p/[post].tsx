@@ -20,7 +20,7 @@ interface PostPageProps {
 const PostPage: React.FC<PostPageProps> = ({ post, markdown, author }) => {
   return (
     <>
-      {post ? (
+      {post && (
         <div>
           <Head>
             <title>{toTitleCase(post.metadata.headline)}</title>
@@ -70,22 +70,6 @@ const PostPage: React.FC<PostPageProps> = ({ post, markdown, author }) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div>
-          <Head>
-            <title>404: Post Not Found</title>
-          </Head>
-
-          <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen px-4">
-            <Navigation></Navigation>
-            <div className="px-4 prose prose-zinc max-w-3xl w-screen prose-red dark:prose-invert font-sans prose-h1:text-5xl prose-h2:text-3xl pt-12">
-              <h1>We couldn't find what you were looking for...</h1>
-              <Link href={"/"}>
-                <a>Go back home</a>
-              </Link>
-            </div>
-          </div>
-        </div>
       )}
     </>
   );
@@ -119,9 +103,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
       },
     };
   } else {
-    return {
-      props: { post: null, markdown: "Test", author: null },
-    };
+    return { notFound: true };
   }
 };
 
