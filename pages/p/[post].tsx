@@ -107,6 +107,4 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
   }
 };
 
-export const config = { amp: true };
-
 export default PostPage;
