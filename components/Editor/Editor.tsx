@@ -96,6 +96,10 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
         createdAt: new Date().getTime(),
         headline: headline,
         summary: summary,
+        commentCount: 0,
+        likeCount: 0,
+        shareCount: 0,
+        viewCount: 0,
       },
     };
 

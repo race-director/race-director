@@ -8,6 +8,10 @@ interface post {
     summary: string;
     author: string;
     createdAt: number;
+    likeCount: number;
+    commentCount: number;
+    viewCount: number;
+    shareCount: number;
   };
   markdownUrl: string;
   id: string;
