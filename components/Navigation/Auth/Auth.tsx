@@ -9,6 +9,9 @@ import { SignIn } from "../SignIn";
 
 interface AuthProps {}
 
+/**
+ * Default profile picture hosted on Firebase Storage Bucket
+ */
 export const FALLBACK_PHOTO_URL =
   "https://firebasestorage.googleapis.com/v0/b/race-director.appspot.com/o/assets%2FFallback_img.jpeg?alt=media&token=a70a5d9c-b2ba-4040-bf33-f252bc5f2b45";
 

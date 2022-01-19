@@ -1,15 +1,9 @@
 import { FirebaseApp } from "firebase/app";
-import { user } from "../../../types";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, User } from "firebase/auth";
-import {
-  doc,
-  Firestore,
-  getDoc,
-  getFirestore,
-  setDoc,
-} from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { user } from "../../../types";
 
 const useFirebaseUser = (app: FirebaseApp): [user, boolean] => {
   const auth = getAuth(app);
