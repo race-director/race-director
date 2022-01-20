@@ -1,3 +1,4 @@
+import { formatDistance, subDays } from "date-fns";
 import {
   addDoc,
   collection,
@@ -24,7 +25,7 @@ import { Navigation } from "../../components/Navigation";
 import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
 import { comment, post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
-import { toTitleCase } from "../../utils/other";
+import { generateAlphanumericStr, toTitleCase } from "../../utils/other";
 import { Auth } from "../_app";
 
 interface PostPageProps {
@@ -49,7 +50,8 @@ const PostPage: React.FC<PostPageProps> = ({
     query(
       collection(db, `posts/${post?.id}/comments`),
       orderBy("createdAt", "desc")
-    )
+    ),
+    { idField: "id" }
   );
   const [postData, postLoading] = useDocumentData(doc(db, `posts/${post?.id}`));
 
@@ -86,6 +88,7 @@ const PostPage: React.FC<PostPageProps> = ({
 
   const submitComment = async () => {
     if (post && user) {
+      const commentId = generateAlphanumericStr(20);
       const newComment: comment = {
         content: commentContent,
         createdAt: new Date().getTime(),
@@ -93,13 +96,14 @@ const PostPage: React.FC<PostPageProps> = ({
         userId: user.uid,
         likes: 0,
         nestedComments: [],
+        commentId,
       };
 
       setCommentContent("");
 
       // Create new comment document in comments subcollection
       const db = getFirestore(firebaseApp);
-      await addDoc(collection(db, `posts/${post.id}/comments`), newComment);
+      await setDoc(doc(db, `posts/${post.id}/comments`, commentId), newComment);
 
       // Update post's comment count
       await setDoc(
@@ -150,8 +154,16 @@ const PostPage: React.FC<PostPageProps> = ({
                         <div>
                           <p className="font-bold">{author.displayName}</p>
                           <div className="text-base flex space-x-2">
-                            <p>2d ago</p> <span>·</span>{" "}
-                            <p>{post.metadata.viewCount}</p>
+                            <p>
+                              {formatDistance(
+                                subDays(new Date(post.metadata.createdAt), 0),
+                                new Date(),
+                                {
+                                  addSuffix: true,
+                                }
+                              )}
+                            </p>
+                            <span>·</span> <p>{post.metadata.viewCount}</p>
                           </div>
                         </div>
                       </div>

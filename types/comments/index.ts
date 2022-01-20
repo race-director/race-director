@@ -16,4 +16,5 @@ export interface comment extends interaction {
   content: string;
   likes: number;
   nestedComments: comment[];
+  commentId: string;
 }
