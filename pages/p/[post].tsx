@@ -33,6 +33,7 @@ interface PostPageProps {
   markdown: string | null;
   author: user;
   comments: comment[];
+  href: string;
 }
 
 const PostPage: React.FC<PostPageProps> = ({
@@ -40,6 +41,7 @@ const PostPage: React.FC<PostPageProps> = ({
   post: initialPost,
   markdown,
   author,
+  href,
 }) => {
   const db = getFirestore(firebaseApp);
   const [commentContent, setCommentContent] = useState<string>("");
@@ -123,7 +125,7 @@ const PostPage: React.FC<PostPageProps> = ({
             <meta name="description" content={post.metadata.summary} />
 
             <meta property="og:type" content="website" />
-            <meta property="og:url" content={location.href} />
+            <meta property="og:url" content={href} />
             <meta
               property="og:title"
               content={toTitleCase(post.metadata.headline)}
@@ -132,7 +134,7 @@ const PostPage: React.FC<PostPageProps> = ({
             <meta property="og:image" content={post.coverImage.coverImageUrl} />
 
             <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content={location.href} />
+            <meta property="twitter:url" content={href} />
             <meta
               property="twitter:title"
               content={toTitleCase(post.metadata.headline)}
@@ -283,6 +285,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
         markdown: markdown,
         author: resAuthor.data() as user,
         comments: comments,
+        href: `https://racedirector.vercel.app${c.resolvedUrl}`,
       },
     };
   } else {
