@@ -119,6 +119,32 @@ const PostPage: React.FC<PostPageProps> = ({
       {post && (
         <div>
           <Head>
+            <meta name="title" content={toTitleCase(post.metadata.headline)} />
+            <meta name="description" content={post.metadata.summary} />
+
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={location.href} />
+            <meta
+              property="og:title"
+              content={toTitleCase(post.metadata.headline)}
+            />
+            <meta property="og:description" content={post.metadata.summary} />
+            <meta property="og:image" content={post.coverImage.coverImageUrl} />
+
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta property="twitter:url" content={location.href} />
+            <meta
+              property="twitter:title"
+              content={toTitleCase(post.metadata.headline)}
+            />
+            <meta
+              property="twitter:description"
+              content={post.metadata.summary}
+            />
+            <meta
+              property="twitter:image"
+              content={post.coverImage.coverImageUrl}
+            />
             <title>{toTitleCase(post.metadata.headline)}</title>
           </Head>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen">
