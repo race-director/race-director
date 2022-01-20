@@ -1,4 +1,11 @@
-function userPrefersDarkMode() {
+/**
+ *
+ * @returns boolean - Whether the user prefers dark mode or not
+ * @note This function only runs on the browser
+ * @note This function was created with Github Copilot's help
+ */
+
+const userPrefersDarkMode = (): boolean => {
   // Try to get user preference from local storage
   const localStoragePrefersDarkMode =
     window.localStorage.getItem("darkmode") === "true";
@@ -13,6 +20,6 @@ function userPrefersDarkMode() {
   // Store preference in local storage
   window.localStorage.setItem("darkmode", prefersDarkMode.matches.toString());
   return prefersDarkMode.matches;
-}
+};
 
 export default userPrefersDarkMode;

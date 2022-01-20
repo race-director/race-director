@@ -1,6 +1,12 @@
 import { block } from "../../components/Editor";
 import { generatePostId } from "../firebase";
 
+/**
+ *
+ * @param h string - The heading of the post. Needed for the filename
+ * @param blocks block[] - The blocks of the post. These will be converted to markdown
+ * @returns [File, string] - The file and the name of the file
+ */
 const convertBlocksToMarkDown = (
   h: string,
   blocks: block[]

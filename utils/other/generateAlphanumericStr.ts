@@ -1,5 +1,11 @@
-// Source:
-// https://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+/**
+ *
+ * @param length number - The length of the string to be generated
+ * @param chars string - The characters to be used in the string. Default is alphanumeric (optional)
+ * @returns string - The generated string
+ *
+ * @see https://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+ */
 
 const generateAlphanumericStr = (length: number, chars?: string) => {
   if (!chars)

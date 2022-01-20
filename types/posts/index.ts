@@ -1,4 +1,10 @@
-interface post {
+/**
+ * @field coverImage - The cover image url and caption of the post.
+ * @field metadata - The metadata of the post.
+ * @field markdownUrl - The markdown url of the post.
+ * @field id - The id of the post.
+ */
+export interface post {
   coverImage: {
     coverImageUrl: string;
     coverImageCaption: string;
@@ -16,5 +22,3 @@ interface post {
   markdownUrl: string;
   id: string;
 }
-
-export type { post };
