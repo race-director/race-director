@@ -42,7 +42,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts }) => {
                         className="object-cover"
                       ></Image>
                     </div>
-                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
+                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0 transition-all hover:opacity-80">
                       <h1 className="lg:text-5xl md:text-4xl text-3xl font-black text-zinc-100">
                         {posts[0].metadata.headline}
                       </h1>
@@ -66,7 +66,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts }) => {
                         layout="fill"
                       ></Image>
                     </div>
-                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
+                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0 transition-all hover:opacity-80">
                       <h1 className="lg:text-2xl md:text-2xl text-xl font-black text-zinc-100">
                         {posts[1].metadata.headline}
                       </h1>
@@ -89,7 +89,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts }) => {
                         layout="fill"
                       ></Image>
                     </div>
-                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0">
+                    <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-transparent top-0 transition-all hover:opacity-80">
                       <h1 className="lg:text-2xl md:text-2xl text-xl font-black text-zinc-100">
                         {posts[2].metadata.headline}
                       </h1>
@@ -110,7 +110,7 @@ export const getServerSideProps: GetServerSideProps<
 > = async () => {
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
-    orderBy("metadata.createdAt", "desc"),
+    orderBy("score", "desc"),
     limit(3)
   );
 
