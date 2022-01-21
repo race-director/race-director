@@ -1,12 +1,12 @@
 import { getAnalytics } from "firebase/analytics";
 import type { AppProps } from "next/app";
-import Head from "next/head";
 import { createContext, useEffect, useState } from "react";
 import { useFirebaseUser } from "../components/Hooks/Auth";
 import "../styles/globals.css";
 import { user } from "../types";
 import { firebaseApp } from "../utils/firebase";
 import { userPrefersDarkMode } from "../utils/other";
+import NextNProgress from "nextjs-progressbar";
 
 export const Auth = createContext<[user, boolean]>([null, true]);
 export const DarkMode = createContext<[() => void, boolean]>([() => {}, true]);
@@ -37,6 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Auth.Provider value={[user, loading]}>
       <DarkMode.Provider value={[toggleDarkMode, darkMode]}>
         <div className={`${darkMode && "dark"}`}>
+          <NextNProgress color="#00acc1" stopDelayMs={200}></NextNProgress>
           <Component {...pageProps} />
         </div>
       </DarkMode.Provider>
