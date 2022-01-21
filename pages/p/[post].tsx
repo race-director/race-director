@@ -97,7 +97,6 @@ const PostPage: React.FC<PostPageProps> = ({
         postId: post.id,
         userId: user.uid,
         likes: 0,
-        nestedComments: [],
         commentId,
       };
 
