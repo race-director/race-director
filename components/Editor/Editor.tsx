@@ -101,6 +101,7 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
         shareCount: 0,
         viewCount: 0,
       },
+      score: 0,
     };
 
     // Upload post to the db
