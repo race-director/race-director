@@ -179,7 +179,7 @@ const PostPage: React.FC<PostPageProps> = ({
                         ></Image>
                         <div>
                           <p className="font-bold">{author.displayName}</p>
-                          <div className="text-base flex space-x-2">
+                          <div className="text-base flex space-x-2 items-center">
                             <p>
                               {formatDistance(
                                 subDays(new Date(post.metadata.createdAt), 0),
@@ -189,7 +189,23 @@ const PostPage: React.FC<PostPageProps> = ({
                                 }
                               )}
                             </p>
-                            <span>·</span> <p>{post.metadata.viewCount}</p>
+                            <div className="flex space-x-2 items-center">
+                              <span>·</span>
+                              <div className="flex items-center space-x-1">
+                                <p>{post.metadata.viewCount}</p>{" "}
+                                <svg
+                                  className="fill-current text-zinc-200 h-4 w-4"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="24px"
+                                  viewBox="0 0 24 24"
+                                  width="24px"
+                                  fill="#000000"
+                                >
+                                  <path d="M0 0h24v24H0V0z" fill="none" />
+                                  <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z" />
+                                </svg>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
