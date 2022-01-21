@@ -322,12 +322,12 @@ const PostPage: React.FC<PostPageProps> = ({
             <div className="max-w-4xl w-screen py-2 grid grid-cols-3 justify-between px-2 gap-2">
               <button
                 onClick={handleLike}
-                className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-2xl font-semibold text-zinc-200/90"
+                className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
               >
                 <div>
                   {isLiked ? (
                     <svg
-                      className="fill-current text-red-600 h-6 w-6"
+                      className="fill-current text-red-600 h-5 w-5 md:h-6 md:w-6"
                       xmlns="http://www.w3.org/2000/svg"
                       height="24px"
                       viewBox="0 0 24 24"
@@ -339,7 +339,7 @@ const PostPage: React.FC<PostPageProps> = ({
                     </svg>
                   ) : (
                     <svg
-                      className="fill-current text-red-600 h-6 w-6"
+                      className="fill-current text-red-600 h-5 w-5 md:h-6 md:w-6"
                       xmlns="http://www.w3.org/2000/svg"
                       height="24px"
                       viewBox="0 0 24 24"
@@ -354,9 +354,9 @@ const PostPage: React.FC<PostPageProps> = ({
                 <span>{post.metadata.likeCount}</span>
               </button>
               <Link href="#comments">
-                <a className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-2xl font-semibold text-zinc-200/90">
+                <a className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90">
                   <svg
-                    className="fill-current text-blue-500/80 h-6 w-6"
+                    className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"
                     xmlns="http://www.w3.org/2000/svg"
                     height="24px"
                     viewBox="0 0 24 24"
@@ -369,10 +369,10 @@ const PostPage: React.FC<PostPageProps> = ({
                   <span>{post.metadata.commentCount}</span>
                 </a>
               </Link>
-              <button className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-2xl font-semibold text-zinc-200/90">
+              <button className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90">
                 <div>
                   <svg
-                    className="fill-current text-blue-500/80 h-6 w-6"
+                    className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"
                     xmlns="http://www.w3.org/2000/svg"
                     height="24px"
                     viewBox="0 0 24 24"
