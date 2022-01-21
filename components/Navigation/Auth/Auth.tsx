@@ -26,9 +26,8 @@ const Auth: React.FC<AuthProps> = () => {
 
   return (
     <>
-      {!loading && (
+      {!loading ? (
         <>
-          <div></div>
           <div className="relative">
             <div
               onClick={() => setExpandedMenuState(!expandedMenuState)}
@@ -185,6 +184,10 @@ const Auth: React.FC<AuthProps> = () => {
               )}
             </AnimatePresence>
           </div>
+        </>
+      ) : (
+        <>
+          <div className="rounded-full h-8 w-8 overflow-hidden"></div>
         </>
       )}
     </>
