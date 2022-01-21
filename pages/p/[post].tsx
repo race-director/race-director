@@ -5,10 +5,12 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  increment,
   limit,
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
@@ -66,17 +68,9 @@ const PostPage: React.FC<PostPageProps> = ({
   // Update view count
   useEffect(() => {
     if (post) {
-      setDoc(
-        doc(db, `posts`, post.id),
-        {
-          ...post,
-          metadata: {
-            ...post.metadata,
-            viewCount: post.metadata.viewCount + 1,
-          },
-        } as post,
-        { merge: true }
-      );
+      updateDoc(doc(db, `posts`, post.id), {
+        "metadata.viewCount": increment(1),
+      });
     }
   }, []);
 
@@ -114,11 +108,9 @@ const PostPage: React.FC<PostPageProps> = ({
       await setDoc(doc(db, `posts/${post.id}/comments`, commentId), newComment);
 
       // Update post's comment count
-      await setDoc(
-        doc(db, `posts`, post.id),
-        { metadata: { commentCount: post.metadata.commentCount + 1 } },
-        { merge: true }
-      );
+      await updateDoc(doc(db, `posts`, post.id), {
+        "metadata.commentCount": increment(1),
+      });
     }
   };
 

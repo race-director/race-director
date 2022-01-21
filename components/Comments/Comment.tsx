@@ -1,12 +1,15 @@
 import { formatDistance, subDays } from "date-fns";
-import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getFirestore,
+  increment,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  useDocument,
-  useDocumentData,
-  useDocumentOnce,
-} from "react-firebase-hooks/firestore";
+import { useDocument, useDocumentOnce } from "react-firebase-hooks/firestore";
 import { Auth } from "../../pages/_app";
 import { comment, commentLike, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
@@ -42,11 +45,9 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         );
 
         // Update like count
-        const likeCount = comment.likes - 1;
-        setDoc(
+        updateDoc(
           doc(db, `posts/${comment.postId}/comments/${comment.commentId}`),
-          { likes: likeCount },
-          { merge: true }
+          { likes: increment(1) }
         );
       } else {
         const like: commentLike = {
@@ -56,11 +57,9 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         };
 
         // Update like count
-        const likeCount = comment.likes + 1;
-        setDoc(
+        updateDoc(
           doc(db, `posts/${comment.postId}/comments/${comment.commentId}`),
-          { likes: likeCount },
-          { merge: true }
+          { likes: increment(1) }
         );
 
         setDoc(
