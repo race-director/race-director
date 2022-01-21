@@ -3,6 +3,7 @@
  * @field metadata - The metadata of the post.
  * @field markdownUrl - The markdown url of the post.
  * @field id - The id of the post.
+ * @field score - The score of the post.
  */
 export interface post {
   coverImage: {
@@ -19,6 +20,7 @@ export interface post {
     viewCount: number;
     shareCount: number;
   };
+  score: number;
   markdownUrl: string;
   id: string;
 }

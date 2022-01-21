@@ -32,6 +32,7 @@ import { firebaseApp } from "../../utils/firebase";
 import {
   generateAlphanumericStr,
   loadMoreComments,
+  ratePost,
   toTitleCase,
 } from "../../utils/other";
 import { Auth } from "../_app";
@@ -111,6 +112,7 @@ const PostPage: React.FC<PostPageProps> = ({
     if (post) {
       updateDoc(doc(db, `posts`, post.id), {
         "metadata.viewCount": increment(1),
+        score: ratePost(post),
       });
     }
   }, []);
