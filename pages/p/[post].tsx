@@ -320,8 +320,8 @@ const PostPage: React.FC<PostPageProps> = ({
             </div>
           </div>
           {/* Bottom bar */}
-          <div className="fixed bottom-0 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900">
-            <div className="max-w-4xl w-screen py-2 grid grid-cols-3 justify-between px-2 gap-2">
+          <div className="fixed bottom-2 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900">
+            <div className="max-w-3xl w-screen grid grid-cols-3 justify-between px-4 gap-2">
               <button
                 onClick={handleLike}
                 className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
