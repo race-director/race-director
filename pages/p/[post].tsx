@@ -1,11 +1,11 @@
 import { formatDistance, subDays } from "date-fns";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   getFirestore,
+  limit,
   orderBy,
   query,
   setDoc,
@@ -25,7 +25,11 @@ import { Navigation } from "../../components/Navigation";
 import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
 import { comment, post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
-import { generateAlphanumericStr, toTitleCase } from "../../utils/other";
+import {
+  generateAlphanumericStr,
+  loadMoreComments,
+  toTitleCase,
+} from "../../utils/other";
 import { Auth } from "../_app";
 
 interface PostPageProps {
@@ -48,10 +52,12 @@ const PostPage: React.FC<PostPageProps> = ({
   const [post, setPost] = useState<post | null>(initialPost);
   const [comments, setComments] = useState<comment[]>(initialComments);
   const [user] = useContext(Auth);
+  const [commentAmount, setCommentAmount] = useState(3);
   const [commentsSnapshot, commentsLoading] = useCollectionData(
     query(
       collection(db, `posts/${post?.id}/comments`),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
+      limit(commentAmount)
     ),
     { idField: "id" }
   );
@@ -229,7 +235,7 @@ const PostPage: React.FC<PostPageProps> = ({
                   </div>
                 </div>
 
-                <div className="grid">
+                <div className="grid gap-2">
                   <h2 className="text-xl md:text-2xl font-bold">
                     Comments ({post.metadata.commentCount})
                   </h2>
@@ -238,7 +244,27 @@ const PostPage: React.FC<PostPageProps> = ({
                       <Comment comment={c} key={idx}></Comment>
                     ))}
                   </div>
-                  {/* <pre>{JSON.stringify(comments)}</pre> */}
+                  {comments.length === 0 && (
+                    <div>
+                      <p className="text-lg text-zinc-200/70">
+                        This is very quiet. Send a comment to start the
+                        conversation!
+                      </p>
+                    </div>
+                  )}
+                  {!(comments.length === post.metadata.commentCount) && (
+                    <button
+                      className="py-2 px-4 border-zinc-200/70 border-2 rounded-md font-semibold transform active:scale-95 transition-all"
+                      onClick={() =>
+                        setCommentAmount(
+                          commentAmount +
+                            loadMoreComments(post, comments.length)
+                        )
+                      }
+                    >
+                      Load more comments
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -271,7 +297,8 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
     const resAuthor = await getDoc(doc(db, "users", docData.metadata.author));
     const commentQ = query(
       collection(db, `posts/${post}/comments`),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
+      limit(3)
     );
     const commentsSnapshot = await getDocs(commentQ);
     let comments: comment[] = [];
