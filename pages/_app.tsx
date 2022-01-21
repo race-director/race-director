@@ -37,7 +37,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Auth.Provider value={[user, loading]}>
       <DarkMode.Provider value={[toggleDarkMode, darkMode]}>
         <div className={`${darkMode && "dark"}`}>
-          <NextNProgress color="#00acc1" stopDelayMs={200}></NextNProgress>
+          <NextNProgress
+            startPosition={0.2}
+            color="#00acc1"
+            stopDelayMs={200}
+            options={{ showSpinner: false, trickleSpeed: 400 }}
+          ></NextNProgress>
           <Component {...pageProps} />
         </div>
       </DarkMode.Provider>
