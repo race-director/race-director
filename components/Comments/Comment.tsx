@@ -47,7 +47,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         // Update like count
         updateDoc(
           doc(db, `posts/${comment.postId}/comments/${comment.commentId}`),
-          { likes: increment(1) }
+          { likes: increment(-1) }
         );
       } else {
         const like: commentLike = {
