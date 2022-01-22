@@ -1,7 +1,6 @@
 import { formatDistance, subDays } from "date-fns";
 import {
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -10,32 +9,26 @@ import {
   limit,
   orderBy,
   query,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
-import {
-  useCollectionData,
-  useDocument,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
-import { Comment } from "../../components/Comments";
+import React, { useEffect, useState } from "react";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Navigation } from "../../components/Navigation";
 import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
-import { comment, post, postLike, user } from "../../types";
-import { firebaseApp } from "../../utils/firebase";
 import {
-  generateAlphanumericStr,
-  loadMoreComments,
-  ratePost,
-  toTitleCase,
-} from "../../utils/other";
-import { Auth } from "../_app";
+  CommentPostButton,
+  HeadMetadata,
+  LikePostButton,
+  SharePostButton,
+} from "../../components/Post";
+import CommentSection from "../../components/Post/CommentSection";
+import { comment, post, user } from "../../types";
+import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 
 interface PostPageProps {
   post: post | null;
@@ -53,72 +46,8 @@ const PostPage: React.FC<PostPageProps> = ({
   href,
 }) => {
   const db = getFirestore(firebaseApp);
-  const [isLiked, setIsLiked] = useState(false);
-  const [commentContent, setCommentContent] = useState<string>("");
   const [post, setPost] = useState<post | null>(initialPost);
-  const [comments, setComments] = useState<comment[]>(initialComments);
-  const [user] = useContext(Auth);
-  const [commentAmount, setCommentAmount] = useState(3);
-  const [commentsSnapshot, commentsLoading] = useCollectionData(
-    query(
-      collection(db, `posts/${post?.id}/comments`),
-      orderBy("createdAt", "desc"),
-      limit(commentAmount)
-    ),
-    { idField: "id" }
-  );
   const [postData, postLoading] = useDocumentData(doc(db, `posts/${post?.id}`));
-  // It is necessary to set up an event listener, so we use useDocumentData
-  const [likeData, likeLoading] = useDocument(
-    doc(db, `posts/${post?.id}/likes/${user?.uid}`)
-  );
-
-  const handleShare = () => {
-    if ("share" in navigator) {
-      navigator
-        .share({ url: location.href })
-        .then(() => {
-          updateDoc(doc(db, `posts/${post?.id}`), {
-            "metadata.shareCount": increment(1),
-          });
-        })
-        .catch((err) => console.error(err));
-    }
-  };
-
-  const handleLike = async () => {
-    if (user) {
-      if (isLiked) {
-        deleteDoc(doc(db, `posts/${post?.id}/likes/${user.uid}`));
-
-        // Update like count
-        updateDoc(doc(db, `posts/${post?.id}`), {
-          "metadata.likeCount": increment(-1),
-        });
-      } else {
-        const like: postLike = {
-          userId: user?.uid || "",
-          postId: post?.id || "",
-          createdAt: new Date().getTime(),
-        };
-
-        // Update like count
-        updateDoc(doc(db, `posts/${post?.id}`), {
-          "metadata.likeCount": increment(1),
-        });
-
-        setDoc(doc(db, `posts/${post?.id}/likes/${user.uid}`), like);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (!likeLoading && likeData?.exists()) {
-      setIsLiked(true);
-    } else {
-      setIsLiked(false);
-    }
-  }, [likeData, likeLoading]);
 
   // Update view count
   useEffect(() => {
@@ -137,71 +66,11 @@ const PostPage: React.FC<PostPageProps> = ({
     }
   }, [postData, postLoading]);
 
-  // Set up the snapshot listener for the comments on the client
-  useEffect(() => {
-    if (!commentsLoading) {
-      setComments(commentsSnapshot?.map((c) => c as unknown as comment) || []);
-    }
-  }, [commentsLoading, commentsSnapshot]);
-
-  const submitComment = async () => {
-    if (post && user) {
-      const commentId = generateAlphanumericStr(20);
-      const newComment: comment = {
-        content: commentContent,
-        createdAt: new Date().getTime(),
-        postId: post.id,
-        userId: user.uid,
-        likes: 0,
-        commentId,
-      };
-
-      setCommentContent("");
-
-      // Create new comment document in comments subcollection
-      const db = getFirestore(firebaseApp);
-      await setDoc(doc(db, `posts/${post.id}/comments`, commentId), newComment);
-
-      // Update post's comment count
-      await updateDoc(doc(db, `posts`, post.id), {
-        "metadata.commentCount": increment(1),
-      });
-    }
-  };
-
   return (
     <>
       {post && (
         <div>
-          <Head>
-            <meta name="title" content={toTitleCase(post.metadata.headline)} />
-            <meta name="description" content={post.metadata.summary} />
-
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content={href} />
-            <meta
-              property="og:title"
-              content={toTitleCase(post.metadata.headline)}
-            />
-            <meta property="og:description" content={post.metadata.summary} />
-            <meta property="og:image" content={post.coverImage.coverImageUrl} />
-
-            <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content={href} />
-            <meta
-              property="twitter:title"
-              content={toTitleCase(post.metadata.headline)}
-            />
-            <meta
-              property="twitter:description"
-              content={post.metadata.summary}
-            />
-            <meta
-              property="twitter:image"
-              content={post.coverImage.coverImageUrl}
-            />
-            <title>{toTitleCase(post.metadata.headline)}</title>
-          </Head>
+          <HeadMetadata href={href} post={post}></HeadMetadata>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
             <Navigation></Navigation>
             <div className="relative w-full max-w-4xl z-0 aspect-video">
@@ -270,139 +139,21 @@ const PostPage: React.FC<PostPageProps> = ({
               )}
               {markdown && <Markdown>{markdown}</Markdown>}
               <hr />
-              <div className="not-prose grid gap-8">
-                <div className="grid gap-4">
-                  <h2 className="text-xl md:text-2xl font-bold">Join in</h2>
-                  <div className="flex">
-                    <input
-                      disabled={!user}
-                      value={commentContent}
-                      onChange={(e) => setCommentContent(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && commentContent) {
-                          submitComment();
-                        }
-                      }}
-                      placeholder={
-                        user ? "Add a comment..." : "Login to comment"
-                      }
-                      className="w-full px-2 py-2 disabled:opacity-60 disabled:cursor-not-allowed bg-transparent border dark:border-zinc-200/60 border-zinc-400/60 rounded-md flex-1 mr-2"
-                    ></input>
-                    <button
-                      onClick={submitComment}
-                      disabled={!commentContent || !user}
-                      className={`px-4 font-semibold dark:bg-cyan-600 bg-cyan-500 hover:bg-cyan-600 text-zinc-100 dark:hover:bg-cyan-700 rounded-md transform transition-all active:scale-95 disabled:opacity-60 disabled:hover:bg-cyan-500 dark:disabled:hover:bg-cyan-600 disabled:cursor-not-allowed`}
-                    >
-                      Send
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid gap-2" id="comments">
-                  <h2 className="text-xl md:text-2xl font-bold">
-                    Comments ({post.metadata.commentCount})
-                  </h2>
-                  <div className="grid">
-                    {comments.map((c, idx) => (
-                      <Comment comment={c} key={idx}></Comment>
-                    ))}
-                  </div>
-                  {comments.length === 0 && (
-                    <div>
-                      <p className="text-lg text-zinc-200/70">
-                        This is very quiet. Send a comment to start the
-                        conversation!
-                      </p>
-                    </div>
-                  )}
-                  {!(comments.length === post.metadata.commentCount) && (
-                    <button
-                      className="py-2 px-4 border-zinc-200/70 border-2 rounded-md font-semibold transform active:scale-95 transition-all"
-                      onClick={() =>
-                        setCommentAmount(
-                          commentAmount +
-                            loadMoreComments(post, comments.length)
-                        )
-                      }
-                    >
-                      Load more comments
-                    </button>
-                  )}
-                </div>
-              </div>
+              <CommentSection
+                initialComments={initialComments}
+                post={post}
+              ></CommentSection>
             </div>
           </div>
           {/* Bottom bar */}
           <div className="fixed bottom-2 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900">
             <div className="max-w-3xl w-screen grid grid-cols-3 justify-between px-4 gap-2">
-              <button
-                onClick={handleLike}
-                className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
-              >
-                <div>
-                  {isLiked ? (
-                    <svg
-                      className="fill-current text-red-600 h-5 w-5 md:h-6 md:w-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      width="24px"
-                      fill="#000000"
-                    >
-                      <path d="M0 0h24v24H0V0z" fill="none" />
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="fill-current text-red-600 h-5 w-5 md:h-6 md:w-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      width="24px"
-                      fill="#000000"
-                    >
-                      <path d="M0 0h24v24H0V0z" fill="none" />
-                      <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z" />
-                    </svg>
-                  )}
-                </div>
-                <span>{post.metadata.likeCount}</span>
-              </button>
-              <Link href="#comments">
-                <a className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90">
-                  <svg
-                    className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    width="24px"
-                    fill="#000000"
-                  >
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" />
-                  </svg>
-                  <span>{post.metadata.commentCount}</span>
-                </a>
-              </Link>
-              <button
-                onClick={handleShare}
-                className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
-              >
-                <div>
-                  <svg
-                    className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    width="24px"
-                    fill="#000000"
-                  >
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
-                  </svg>
-                </div>
-                <span>{post.metadata.shareCount}</span>
-              </button>
+              <LikePostButton post={post}></LikePostButton>
+              <CommentPostButton
+                href="#comments"
+                post={post}
+              ></CommentPostButton>
+              <SharePostButton post={post}></SharePostButton>
             </div>
           </div>
         </div>
