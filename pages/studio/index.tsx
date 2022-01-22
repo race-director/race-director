@@ -25,7 +25,7 @@ const StudioPage: React.FC<StudioPageProps> = () => {
       <Navigation></Navigation>
       {user ? (
         <>
-          <div className="max-w-7xl w-screen grid">
+          <div className="max-w-screen-2xl w-screen grid">
             <div className="grid gap-6 px-4 py-8 md:py-12">
               <h1 className="text-4xl text-zinc-200 font-bold">Your posts</h1>
               <div className="grid gap-4">

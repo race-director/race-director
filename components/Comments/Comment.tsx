@@ -90,6 +90,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           <div className="flex w-full justify-between">
             <div className="flex space-x-3 items-center font-semibold">
               <Image
+                alt={displayName}
                 src={photoURL || ""}
                 height={32}
                 width={32}

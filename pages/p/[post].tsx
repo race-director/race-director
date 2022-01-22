@@ -73,6 +73,19 @@ const PostPage: React.FC<PostPageProps> = ({
     doc(db, `posts/${post?.id}/likes/${user?.uid}`)
   );
 
+  const handleShare = () => {
+    if ("share" in navigator) {
+      navigator
+        .share({ url: location.href })
+        .then(() => {
+          updateDoc(doc(db, `posts/${post?.id}`), {
+            "metadata.shareCount": increment(1),
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   const handleLike = async () => {
     if (user) {
       if (isLiked) {
@@ -371,7 +384,10 @@ const PostPage: React.FC<PostPageProps> = ({
                   <span>{post.metadata.commentCount}</span>
                 </a>
               </Link>
-              <button className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90">
+              <button
+                onClick={handleShare}
+                className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
+              >
                 <div>
                   <svg
                     className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"

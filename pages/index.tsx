@@ -10,8 +10,10 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Navigation } from "../components/Navigation";
+import { PostCard } from "../components/Post";
 import { post } from "../types";
 import { firebaseApp } from "../utils/firebase";
 
@@ -19,15 +21,29 @@ interface HomePageProps {
   posts: post[];
 }
 
-const HomePage: React.FC<HomePageProps> = ({ posts }) => {
+const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts }) => {
+  const postsQ = query(
+    collection(getFirestore(firebaseApp), "posts"),
+    orderBy("score", "desc"),
+    limit(10)
+  );
+  const [postData, loading] = useCollectionData(postsQ);
+  const [posts, setPosts] = useState<post[]>(initialPosts);
+
+  useEffect(() => {
+    if (!loading) {
+      setPosts(postData as unknown as post[]);
+    }
+  }, [postData, loading]);
+
   return (
-    <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900">
+    <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900 pb-12">
       <Head>
         <title>Race Director</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navigation></Navigation>
-      <div className="max-w-7xl w-full flex flex-col">
+      <div className="max-w-screen-2xl w-full flex flex-col">
         <div className="grid lg:grid-cols-8 lg:grid-rows-2 grid-rows-1 grid-cols-2">
           {posts[0] && (
             <div className="lg:col-span-5 col-span-5 lg:row-span-2 row-span-1">
@@ -100,6 +116,29 @@ const HomePage: React.FC<HomePageProps> = ({ posts }) => {
             </div>
           )}
         </div>
+        <div className="px-4 pt-6 lg:pt-12 grid lg:grid-cols-12 gap-6">
+          <div className="grid gap-4 lg:col-span-7">
+            <h1 className="text-3xl lg:text-4xl font-bold uppercase text-zinc-200 pb-2 lg:pb-2">
+              Suggested
+            </h1>
+            {posts.length > 3 &&
+              posts.map((p, idx) => {
+                if (idx >= 3) return <PostCard post={p} key={idx}></PostCard>;
+              })}
+          </div>
+          <div className="grid gap-4 lg:col-span-5 items-start justify-start">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold uppercase text-zinc-200 pb-2 lg:pb-2">
+                Activity
+              </h1>
+              <div className="grid gap-4 pt-4">
+                <p className="text-xl text-center text-zinc-200/70">
+                  This section is under construction
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -111,7 +150,7 @@ export const getServerSideProps: GetServerSideProps<
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
     orderBy("score", "desc"),
-    limit(3)
+    limit(10)
   );
 
   const postRes = await getDocs(postsQ);
