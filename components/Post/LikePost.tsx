@@ -30,9 +30,9 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
       const postRef = doc(db, `posts/${post?.id}`);
 
       if (isLiked) {
-        deleteDoc(likeRef);
+        await deleteDoc(likeRef);
         // Update like count
-        updateDoc(postRef, {
+        await updateDoc(postRef, {
           "metadata.likeCount": increment(-1),
         });
       } else {
@@ -43,10 +43,10 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
         };
 
         // Update like count
-        updateDoc(postRef, {
+        await setDoc(likeRef, like);
+        await updateDoc(postRef, {
           "metadata.likeCount": increment(1),
         });
-        setDoc(likeRef, like);
       }
     }
   };

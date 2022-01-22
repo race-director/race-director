@@ -14,9 +14,9 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html className="scroll-smooth">
+      <Html className="scroll-smooth bg-zinc-900">
         <Head>
-          <link rel="manifest" href="manifest.json" />
+          <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#18181b" />
           <link rel="apple-touch-icon" href="/icon-192x192.png" />
           <meta

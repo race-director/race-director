@@ -19,9 +19,10 @@ import { firebaseApp } from "../utils/firebase";
 
 interface HomePageProps {
   posts: post[];
+  host: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts }) => {
+const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
     orderBy("score", "desc"),
@@ -123,7 +124,14 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts }) => {
             </h1>
             {posts.length > 3 &&
               posts.map((p, idx) => {
-                if (idx >= 3) return <PostCard post={p} key={idx}></PostCard>;
+                if (idx >= 3)
+                  return (
+                    <PostCard
+                      href={`${host}p/${p.id}`}
+                      post={p}
+                      key={idx}
+                    ></PostCard>
+                  );
               })}
           </div>
           <div className="grid gap-4 lg:col-span-5 items-start justify-start">
@@ -159,6 +167,7 @@ export const getServerSideProps: GetServerSideProps<
   return {
     props: {
       posts: posts as post[],
+      host: process.env.HOST || "",
     },
   };
 };

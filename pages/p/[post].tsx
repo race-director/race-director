@@ -35,7 +35,7 @@ interface PostPageProps {
   markdown: string | null;
   author: user;
   comments: comment[];
-  href: string;
+  host: string;
 }
 
 const PostPage: React.FC<PostPageProps> = ({
@@ -43,7 +43,7 @@ const PostPage: React.FC<PostPageProps> = ({
   post: initialPost,
   markdown,
   author,
-  href,
+  host,
 }) => {
   const db = getFirestore(firebaseApp);
   const [post, setPost] = useState<post | null>(initialPost);
@@ -54,12 +54,20 @@ const PostPage: React.FC<PostPageProps> = ({
     if (post) {
       updateDoc(doc(db, `posts`, post.id), {
         "metadata.viewCount": increment(1),
-        score: ratePost(post),
       });
     }
   }, []);
 
-  // Set up the snapshot listener for the post on the client
+  // Update post score every time data changes
+  useEffect(() => {
+    if (post) {
+      updateDoc(doc(db, `posts`, post.id), {
+        score: ratePost(post),
+      });
+    }
+  }, [post]);
+
+  // Use the snapshot listener and set the post state
   useEffect(() => {
     if (!postLoading) {
       setPost(postData as unknown as post);
@@ -70,7 +78,7 @@ const PostPage: React.FC<PostPageProps> = ({
     <>
       {post && (
         <div>
-          <HeadMetadata href={href} post={post}></HeadMetadata>
+          <HeadMetadata href={`${host}p/${post.id}`} post={post}></HeadMetadata>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
             <Navigation></Navigation>
             <div className="relative w-full max-w-4xl z-0 aspect-video">
@@ -153,7 +161,10 @@ const PostPage: React.FC<PostPageProps> = ({
                 href="#comments"
                 post={post}
               ></CommentPostButton>
-              <SharePostButton post={post}></SharePostButton>
+              <SharePostButton
+                href={`${host}p/${post.id}`}
+                post={post}
+              ></SharePostButton>
             </div>
           </div>
         </div>
@@ -199,7 +210,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
         markdown: markdown,
         author: resAuthor.data() as user,
         comments: comments,
-        href: `https://racedirector.vercel.app${c.resolvedUrl}`,
+        host: `${process.env.HOST}`,
       },
     };
   } else {

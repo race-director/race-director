@@ -5,16 +5,17 @@ import { firebaseApp } from "../../utils/firebase";
 
 interface SharePostProps {
   post: post;
+  href: string;
 }
 
-const SharePost: React.FC<SharePostProps> = ({ post }) => {
+const SharePost: React.FC<SharePostProps> = ({ post, href }) => {
   const db = getFirestore(firebaseApp);
 
   const handleShare = () => {
     const postRef = doc(db, `posts/${post?.id}`);
     if ("share" in navigator) {
       navigator
-        .share({ url: location.href })
+        .share({ url: href })
         .then(() => {
           updateDoc(postRef, {
             "metadata.shareCount": increment(1),

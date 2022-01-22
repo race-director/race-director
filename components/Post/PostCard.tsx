@@ -1,78 +1,27 @@
-import {
-  deleteDoc,
-  doc,
-  getFirestore,
-  increment,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
-import { useDocument } from "react-firebase-hooks/firestore";
+import React, { useEffect } from "react";
 import { CommentPostButton, LikePostButton, SharePostButton } from ".";
-import { Auth } from "../../pages/_app";
-import { post, postLike } from "../../types";
+import { post } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 
 interface PostCardProps {
   post: post;
+  href: string;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [user] = useContext(Auth);
+const PostCard: React.FC<PostCardProps> = ({ post, href }) => {
   const db = getFirestore(firebaseApp);
-  const [likeData, likeLoading] = useDocument(
-    doc(db, `posts/${post?.id}/likes/${user?.uid}`)
-  );
-
-  const handleShare = () => {
-    if ("share" in navigator) {
-      navigator
-        .share({ url: `${location.href}p/${post.id}` })
-        .then(() => {
-          updateDoc(doc(db, `posts/${post?.id}`), {
-            "metadata.shareCount": increment(1),
-          });
-        })
-        .catch((err) => console.error(err));
-    }
-  };
-
-  const handleLike = async () => {
-    if (user) {
-      if (isLiked) {
-        deleteDoc(doc(db, `posts/${post?.id}/likes/${user.uid}`));
-
-        // Update like count
-        updateDoc(doc(db, `posts/${post?.id}`), {
-          "metadata.likeCount": increment(-1),
-        });
-      } else {
-        const like: postLike = {
-          userId: user?.uid || "",
-          postId: post?.id || "",
-          createdAt: new Date().getTime(),
-        };
-
-        // Update like count
-        updateDoc(doc(db, `posts/${post?.id}`), {
-          "metadata.likeCount": increment(1),
-        });
-
-        setDoc(doc(db, `posts/${post?.id}/likes/${user.uid}`), like);
-      }
-    }
-  };
 
   useEffect(() => {
-    if (!likeLoading && likeData?.exists()) {
-      setIsLiked(true);
-    } else {
-      setIsLiked(false);
+    if (post) {
+      updateDoc(doc(db, `posts`, post.id), {
+        score: ratePost(post),
+      });
     }
-  }, [likeData, likeLoading]);
+  }, [post]);
 
   return (
     <div className="shadow-lg overflow-hidden rounded-md">
@@ -99,7 +48,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             post={post}
             href={`/p/${post.id}#comments`}
           ></CommentPostButton>
-          <SharePostButton post={post}></SharePostButton>
+          <SharePostButton href={href} post={post}></SharePostButton>
         </div>
       </div>
     </div>
