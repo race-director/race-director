@@ -17,6 +17,8 @@ class MyDocument extends Document {
       <Html className="scroll-smooth">
         <Head>
           <link rel="manifest" href="manifest.json" />
+          <meta name="theme-color" content="#18181b" />
+          <link rel="apple-touch-icon" href="/icon-192x192.png" />
           <meta
             name="google-site-verification"
             content="ieFF-dTmh1vXEf5_t7r1t4sQDBzL1qn0VMptrS753rg"
