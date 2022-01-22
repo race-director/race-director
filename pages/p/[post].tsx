@@ -82,7 +82,7 @@ const PostPage: React.FC<PostPageProps> = ({
             "metadata.shareCount": increment(1),
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
   };
 

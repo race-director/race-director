@@ -29,13 +29,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const handleShare = () => {
     if ("share" in navigator) {
       navigator
-        .share({ url: location.href })
+        .share({ url: `${location.href}p/${post.id}` })
         .then(() => {
           updateDoc(doc(db, `posts/${post?.id}`), {
             "metadata.shareCount": increment(1),
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
   };
 
