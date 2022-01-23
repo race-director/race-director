@@ -17,6 +17,9 @@ interface LikePostProps {
 }
 
 const LikePost: React.FC<LikePostProps> = ({ post }) => {
+  const [localLikeAmount, setLocalLikeAmount] = useState(
+    post.metadata.likeCount
+  );
   const db = getFirestore(firebaseApp);
   const [isLiked, setIsLiked] = useState(false);
   const [user] = useContext(Auth);
@@ -30,6 +33,7 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
       const postRef = doc(db, `posts/${post?.id}`);
 
       if (isLiked) {
+        setLocalLikeAmount(localLikeAmount - 1);
         await deleteDoc(likeRef);
         // Update like count
         await updateDoc(postRef, {
@@ -41,6 +45,7 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
           postId: post?.id || "",
           createdAt: new Date().getTime(),
         };
+        setLocalLikeAmount(localLikeAmount + 1);
 
         // Update like count
         await setDoc(likeRef, like);
@@ -91,7 +96,7 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
           </svg>
         )}
       </div>
-      <span>{post.metadata.likeCount}</span>
+      <span>{localLikeAmount}</span>
     </button>
   );
 };
