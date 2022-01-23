@@ -128,7 +128,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
             </div>
           )}
         </div>
-        <div className="px-4 pt-6 lg:pt-12 grid lg:grid-cols-12 gap-6">
+        <div className="px-4 lg:px-10 pt-6 lg:pt-12 grid lg:grid-cols-12 gap-6">
           <div className="grid gap-4 lg:col-span-7">
             <h1 className="text-3xl lg:text-4xl font-bold uppercase text-zinc-200 pb-2 lg:pb-2">
               Suggested
