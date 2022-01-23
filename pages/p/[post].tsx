@@ -76,7 +76,7 @@ const PostPage: React.FC<PostPageProps> = ({
 
   return (
     <>
-      {post && (
+      {post ? (
         <div>
           <HeadMetadata href={`${host}p/${post.id}`} post={post}></HeadMetadata>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
@@ -168,6 +168,8 @@ const PostPage: React.FC<PostPageProps> = ({
             </div>
           </div>
         </div>
+      ) : (
+        <div>We encountered an issue while loading this post</div>
       )}
     </>
   );

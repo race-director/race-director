@@ -1,7 +1,7 @@
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CommentPostButton, LikePostButton, SharePostButton } from ".";
 import { post } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
@@ -10,10 +10,39 @@ import { ratePost } from "../../utils/other";
 interface PostCardProps {
   post: post;
   href: string;
+  isLast: boolean;
+  loadMore: () => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, href }) => {
+const PostCard: React.FC<PostCardProps> = ({
+  post,
+  href,
+  isLast,
+  loadMore,
+}) => {
   const db = getFirestore(firebaseApp);
+  const [timesIntersected, setTimesIntersected] = useState<number>(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      () => setTimesIntersected((t) => t + 1),
+      { threshold: 0.25 }
+    );
+    if (isLast) {
+      let target = document.getElementById(post.id);
+      observer.observe(target as Element);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (timesIntersected === 2) {
+      loadMore();
+    }
+  }, [timesIntersected]);
 
   useEffect(() => {
     if (post) {
@@ -24,7 +53,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, href }) => {
   }, [post]);
 
   return (
-    <div className="shadow-lg overflow-hidden rounded-md">
+    <div className="shadow-lg overflow-hidden rounded-md" id={post.id}>
       <Link href={`/p/${post.id}`}>
         <a>
           <div className="aspect-video object-cover relative">

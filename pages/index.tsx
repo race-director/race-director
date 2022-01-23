@@ -1,17 +1,20 @@
 import {
   collection,
+  DocumentData,
   getDocs,
   getFirestore,
   limit,
   orderBy,
+  Query,
   query,
+  startAfter,
+  startAt,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Navigation } from "../components/Navigation";
 import { PostCard } from "../components/Post";
 import { post } from "../types";
@@ -23,19 +26,55 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
-  const postsQ = query(
-    collection(getFirestore(firebaseApp), "posts"),
-    orderBy("score", "desc"),
-    limit(10)
-  );
-  const [postData, loading] = useCollectionData(postsQ);
+  const constructQuery = async (prevQ?: Query<unknown>) => {
+    if (prevQ) {
+      return query(
+        collection(getFirestore(firebaseApp), "posts"),
+        orderBy("score", "desc"),
+        startAfter(await getLastDocument(prevQ)),
+        limit(3)
+      );
+    } else {
+      // This is the first query
+      return query(
+        collection(getFirestore(firebaseApp), "posts"),
+        orderBy("score", "desc"),
+        startAt(1),
+        limit(5)
+      );
+    }
+  };
+
+  // const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<post[]>(initialPosts);
+  const [currQuery, setCurrQuery] = useState<Promise<
+    Query<DocumentData>
+  > | null>(null);
 
   useEffect(() => {
-    if (!loading) {
-      setPosts(postData as unknown as post[]);
+    loadMore();
+  }, []);
+
+  const loadMore = async () => {
+    if (currQuery) {
+      const q = constructQuery(await currQuery);
+      const documentSnapshots = await getDocs(await q);
+      let newPosts: post[] = [];
+      documentSnapshots.forEach((doc) => {
+        newPosts.push(doc.data() as post);
+      });
+      setPosts([...posts, ...newPosts]);
+      setCurrQuery(q);
+    } else {
+      const q = constructQuery();
+      setCurrQuery(q);
     }
-  }, [postData, loading]);
+  };
+
+  const getLastDocument = async (q: Query<unknown>) => {
+    const documentSnapshots = await getDocs(q);
+    return documentSnapshots.docs[documentSnapshots.docs.length - 1];
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900 pb-12">
@@ -69,7 +108,6 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
               </Link>
             </div>
           )}
-
           {posts[1] && (
             <div className="lg:col-span-3 lg:h-72 h-60">
               <Link href={`/p/${posts[1].id}`}>
@@ -127,9 +165,11 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
                 if (idx >= 3)
                   return (
                     <PostCard
+                      isLast={idx === posts.length - 1}
                       href={`${host}p/${p.id}`}
                       post={p}
                       key={idx}
+                      loadMore={loadMore}
                     ></PostCard>
                   );
               })}
@@ -158,7 +198,7 @@ export const getServerSideProps: GetServerSideProps<
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
     orderBy("score", "desc"),
-    limit(10)
+    limit(5)
   );
 
   const postRes = await getDocs(postsQ);
