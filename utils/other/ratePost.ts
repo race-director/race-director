@@ -37,7 +37,7 @@ const ratePost = (p: post): number => {
     (likeWeightedRatio + commentWeightedRatio + shareWeightedRatio) /
     (likeWeight + commentWeight + shareWeight);
 
-  return score;
+  return isNaN(score) ? 0 : score;
 };
 
 export default ratePost;

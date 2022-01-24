@@ -36,9 +36,12 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                     return (
                       <Link key={p.id} href={`p/${p.id}`}>
                         <a>
-                          <div className="flex space-x-4 border border-zinc-200 rounded-md overflow-hidden px-2">
-                            <div className="md:w-auto md:h-48 w-full aspect-video">
-                              <img src={coverImage.coverImageUrl}></img>
+                          <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden">
+                            <div>
+                              <img
+                                className="lg:h-44 aspect-video object-cover w-full"
+                                src={coverImage.coverImageUrl}
+                              ></img>
                             </div>
                             <div className="text-zinc-200 py-4">
                               <h1 className="text-2xl font-bold tracking-tighter">

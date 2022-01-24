@@ -31,6 +31,7 @@ const Quote: React.FC<QuoteProps> = ({ editorState, idx }) => {
       onKeyDown={handleKeyPress}
       onChange={handleChange}
       value={state.content[idx].text}
+      placeholder="Write a quote"
     ></textarea>
   );
 };

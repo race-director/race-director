@@ -47,7 +47,15 @@ const PostPage: React.FC<PostPageProps> = ({
 }) => {
   const db = getFirestore(firebaseApp);
   const [post, setPost] = useState<post | null>(initialPost);
-  const [postData, postLoading] = useDocumentData(doc(db, `posts/${post?.id}`));
+  const [postData, postLoading, postErr] = useDocumentData(
+    doc(db, `posts/${post?.id}`)
+  );
+
+  useEffect(() => {
+    if (postErr) {
+      console.error(postErr);
+    }
+  }, [postErr]);
 
   // Update view count
   useEffect(() => {
@@ -69,7 +77,7 @@ const PostPage: React.FC<PostPageProps> = ({
 
   // Use the snapshot listener and set the post state
   useEffect(() => {
-    if (!postLoading) {
+    if (!postLoading && postData) {
       setPost(postData as unknown as post);
     }
   }, [postData, postLoading]);
@@ -169,7 +177,9 @@ const PostPage: React.FC<PostPageProps> = ({
           </div>
         </div>
       ) : (
-        <div>We encountered an issue while loading this post</div>
+        <div>
+          <h1>We encountered an issue while loading this post</h1>
+        </div>
       )}
     </>
   );
