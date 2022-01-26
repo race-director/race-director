@@ -50,9 +50,9 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
               <div className="max-h-96 overflow-y-scroll py-3" ref={scrollRef}>
                 <div className="grid gap-3">
                   <p className="text-zinc-200/70">
-                    Hi! I'm Axel Padilla, the creator of Race Director.
-                    Following the announcement of DriveTribe's shutdown, I have
-                    been working incredibly hard in order to get this up an
+                    Hi! I&apos;m Axel Padilla, the creator of Race Director.
+                    Following the announcement of DriveTribe&apos;s shutdown, I
+                    have been working incredibly hard in order to get this up an
                     running as quickly as possible.
                   </p>
                   <p className="text-zinc-200/70">
@@ -94,6 +94,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                       className="underline"
                       href="https://github.com/FadedController/race-director/issues"
                       target={"_blank"}
+                      rel="noreferrer"
                     >
                       here.
                     </a>
@@ -105,6 +106,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                       className="underline"
                       href="https://github.com/FadedController/race-director"
                       target={"_blank"}
+                      rel="noreferrer"
                     >
                       github repo.
                     </a>
