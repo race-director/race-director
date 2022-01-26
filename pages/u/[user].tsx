@@ -17,8 +17,8 @@ const UserPage: React.FC<UserPageProps> = ({ userData }) => {
   return (
     <div>
       <AnimatePresence>
-        {process.env.NODE_ENV !== "development" ? (
-          <Backdrop onClick={() => router.push("/")}>
+        {process.env.NODE_ENV === "development" ? (
+          <Backdrop onClick={() => router.back()}>
             <Modal>
               <div className="p-8 grid gap-4">
                 <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
@@ -35,7 +35,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData }) => {
                     Go back home
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.back()}
                     className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
                   >
                     Cancel
