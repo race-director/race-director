@@ -8,7 +8,7 @@ const uploadImage = async (i: File, uid: string): Promise<string> => {
     i.name.includes(".jpeg") ||
     i.name.includes(".png")
   ) {
-    if (i.size <= 300000) {
+    if (i.size <= 5000000) {
       const storage = getStorage(firebaseApp);
       const extension = i.name.split(".").pop();
       const fileRef = ref(
@@ -19,7 +19,7 @@ const uploadImage = async (i: File, uid: string): Promise<string> => {
       return await getDownloadURL(res.ref);
     } else {
       throw new Error(
-        "Image size should be less than 300kb. Try a smaller image."
+        "Image size should be less than 5mb. Try a smaller image."
       );
     }
   } else {
