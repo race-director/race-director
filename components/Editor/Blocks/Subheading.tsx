@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { blockType, editorContent } from "..";
 
 interface SubheadingProps {
@@ -16,6 +16,12 @@ const Subheading: React.FC<SubheadingProps> = ({
   createBlockFx,
 }) => {
   const [state, setState] = editorState;
+  const blockRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    blockRef.current.focus();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!e.target.value.includes("\n")) {
@@ -44,6 +50,8 @@ const Subheading: React.FC<SubheadingProps> = ({
       onKeyDown={handleKeyPress}
       onChange={handleChange}
       value={state.content[idx].text}
+      placeholder="Write your subheading"
+      ref={blockRef}
     ></textarea>
   );
 };

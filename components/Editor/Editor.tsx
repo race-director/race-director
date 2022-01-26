@@ -1,11 +1,9 @@
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { Auth } from "../../pages/_app";
-import { post } from "../../types";
-import { firebaseApp } from "../../utils/firebase";
-import { convertBlocksToMarkDown } from "../../utils/markdown";
+import { submitPost } from "../../utils/firebase";
+import { Backdrop, Modal } from "../Menus";
 import { CoverImage, Headline, Paragraph, Quote, Subheading } from "./Blocks";
 
 interface EditorProps {
@@ -35,6 +33,7 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   const [user] = useContext(Auth);
   const router = useRouter();
 
+  const [error, setError] = useState<Error | null>(null);
   const [editorState, setEditorState] = useState<editorContent>(
     initialEditorContent || {
       coverImage: {
@@ -48,46 +47,12 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   );
 
   const handleSubmit = async () => {
-    const { headline, content, summary, coverImage } = editorState;
-    const [markdownFile, filename] = convertBlocksToMarkDown(headline, content);
-
-    // Handle cloud storage upload
-    const storage = getStorage(firebaseApp);
-    const fileRef = ref(storage, `/posts/${filename}`);
-    const res = await uploadBytes(fileRef, markdownFile);
-    const downloadURL = await getDownloadURL(res.ref);
-
-    //Handle db post creation
-    let postId = filename.replace(".md", "");
-    const dbPost: post = {
-      coverImage: {
-        coverImageCaption: coverImage.coverImageCaption,
-        coverImageUrl: coverImage.coverImageUrl,
-      },
-      id: postId,
-      markdownUrl: downloadURL,
-      metadata: {
-        author: user?.uid || "",
-        createdAt: new Date().getTime(),
-        headline: headline,
-        summary: summary,
-        commentCount: 0,
-        likeCount: 0,
-        shareCount: 0,
-        viewCount: 0,
-      },
-      score: 0,
-    };
-
-    // Upload post to the db
-    const db = getFirestore(firebaseApp);
-    const postDoc = doc(db, "posts", postId);
-    await setDoc(postDoc, dbPost);
-
-    // Store editable post
-    const editorStateDoc = doc(db, `users/${user?.uid}/posts`, postId);
-    await setDoc(editorStateDoc, editorState);
-    router.push("/studio");
+    try {
+      await submitPost(editorState, user);
+      router.push("/studio");
+    } catch (error) {
+      setError(error as Error);
+    }
   };
 
   const createBlock = (type: blockType) => {
@@ -98,7 +63,37 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   };
 
   return (
-    <div className="grid gap-4 grid-cols-1">
+    <div className="grid gap-4 grid-cols-1 pb-40">
+      <AnimatePresence>
+        {error && (
+          <Backdrop onClick={() => setError(null)}>
+            <Modal>
+              <div className="p-8 grid gap-4">
+                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  We seem to have encountered an issue
+                </h1>
+                <p className="text-zinc-200/70">
+                  Error message: {error.message}
+                </p>
+                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                  <button
+                    onClick={() => setError(null)}
+                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                  >
+                    Okay
+                  </button>
+                  <button
+                    onClick={() => setError(null)}
+                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </Backdrop>
+        )}
+      </AnimatePresence>
       <CoverImage editorState={[editorState, setEditorState]}></CoverImage>
       <Headline
         createBlockFx={createBlock}
@@ -142,10 +137,34 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
             );
         }
       })}
-      <button onClick={() => createBlock("paragraph")}>New Paragraph</button>
-      <button onClick={() => createBlock("subheading")}>New Subheading</button>
-      <button onClick={() => createBlock("quote")}>New Quote</button>
-      <button onClick={handleSubmit}>Submit</button>
+      <div className="fixed bottom-0 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900 pb-4">
+        <div className="max-w-5xl w-screen grid grid-cols-3 justify-between px-4 gap-x-2 gap-y-4">
+          <button
+            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            onClick={() => createBlock("paragraph")}
+          >
+            Add Paragraph
+          </button>
+          <button
+            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            onClick={() => createBlock("subheading")}
+          >
+            Add Subheading
+          </button>
+          <button
+            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            onClick={() => createBlock("quote")}
+          >
+            Add Quote
+          </button>
+          <button
+            className="bg-red-600 col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+            onClick={handleSubmit}
+          >
+            Publish
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

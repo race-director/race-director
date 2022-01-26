@@ -26,13 +26,8 @@ const CoverImage: React.FC<CoverImageProps> = ({
     try {
       const imageUrl = await uploadImage(imageFile, user?.uid || "");
       setEditorState({
-        content: editorState.content,
-        coverImage: {
-          coverImageCaption: editorState.coverImage.coverImageCaption,
-          coverImageUrl: imageUrl,
-        },
-        headline: editorState.headline,
-        summary: editorState.summary,
+        ...editorState,
+        coverImage: { coverImageUrl: imageUrl, coverImageCaption: "" },
       });
     } catch (error) {
       setImageError(error as Error);

@@ -3,6 +3,7 @@ import generatePostId from "./generatePostId";
 import getLastDocument from "./getLastDocument";
 import constructQuery from "./constructQuery";
 import uploadImage from "./uploadImage";
+import submitPost from "./submitPost";
 
 export {
   app as firebaseApp,
@@ -10,4 +11,5 @@ export {
   getLastDocument,
   constructQuery,
   uploadImage,
+  submitPost,
 };

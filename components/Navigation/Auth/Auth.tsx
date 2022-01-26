@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { Auth as AuthContext, DarkMode } from "../../../pages/_app";
 import { firebaseApp } from "../../../utils/firebase";
+import { Backdrop, Modal } from "../../Menus";
 import { SignIn } from "../SignIn";
 
 interface AuthProps {}
@@ -26,6 +27,36 @@ const Auth: React.FC<AuthProps> = () => {
 
   return (
     <>
+      <AnimatePresence>
+        {!darkMode && (
+          <Backdrop onClick={() => toggleDarkMode()}>
+            <Modal>
+              <div className="p-8 grid gap-4">
+                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  Light mode is still not available.
+                </h1>
+                <p className="text-zinc-200/70">
+                  It will be, it just isn't yet
+                </p>
+                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                  <button
+                    onClick={() => toggleDarkMode()}
+                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                  >
+                    Okay
+                  </button>
+                  <button
+                    onClick={() => toggleDarkMode()}
+                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </Backdrop>
+        )}
+      </AnimatePresence>
       {!loading ? (
         <>
           <div className="relative">

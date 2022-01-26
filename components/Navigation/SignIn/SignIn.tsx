@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { user } from "../../../types";
 import { firebaseApp } from "../../../utils/firebase";
+import { Backdrop, Modal } from "../../Menus";
 import { FALLBACK_PHOTO_URL } from "../Auth/Auth";
 
 interface SignInProps {
@@ -64,20 +65,8 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
     <>
       <AnimatePresence>
         {state && (
-          <motion.div
-            onClick={() => setState(null)}
-            className="fixed top-0 right-0 bottom-0 left-0 grid items-center justify-center bg-zinc-900/70"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              className="max-w-xl w-screen bg-zinc-800 rounded-md"
-              initial={{ opacity: 0, y: -300 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -300 }}
-            >
+          <Backdrop onClick={() => setState(null)}>
+            <Modal>
               <div className="p-8">
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-4">
@@ -190,8 +179,8 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </Modal>
+          </Backdrop>
         )}
       </AnimatePresence>
     </>

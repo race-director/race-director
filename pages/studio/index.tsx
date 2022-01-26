@@ -29,8 +29,8 @@ const StudioPage: React.FC<StudioPageProps> = () => {
             <div className="grid gap-6 px-4 py-8 md:py-12">
               <h1 className="text-4xl text-zinc-200 font-bold">Your posts</h1>
               <div className="grid gap-4">
-                {!loading &&
-                  snapshot?.map((p) => {
+                {!loading && snapshot ? (
+                  snapshot.map((p) => {
                     const { coverImage, headline, summary } =
                       p as unknown as editorContent;
                     return (
@@ -53,15 +53,30 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                         </a>
                       </Link>
                     );
-                  })}
+                  })
+                ) : (
+                  <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden">
+                    <div className="text-zinc-200 py-4">
+                      <h1 className="text-2xl font-bold tracking-tighter">
+                        You have not written any posts yet
+                      </h1>
+                      <p>
+                        Write your first by clicking on the red button at the
+                        bottom of the screen
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </>
       ) : (
-        <>
-          <p>Log in to use the studio</p>
-        </>
+        <div className="pt-8">
+          <p className="text-xl uppercase font-bold text-zinc-200/90">
+            Log in to use the studio
+          </p>
+        </div>
       )}
       <Link href="/studio/new">
         <a className="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-red-600 h-16 w-16 rounded-full grid items-center justify-center">

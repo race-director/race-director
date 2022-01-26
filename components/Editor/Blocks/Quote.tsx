@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { editorContent } from "..";
 
 interface QuoteProps {
@@ -11,10 +11,19 @@ interface QuoteProps {
 
 const Quote: React.FC<QuoteProps> = ({ editorState, idx }) => {
   const [state, setState] = editorState;
+  const blockRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    blockRef.current.focus();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     let newContent = state.content;
-    newContent[idx] = { ...newContent[idx], text: e.target.value };
+    newContent[idx] = {
+      ...newContent[idx],
+      text: e.target.value,
+    };
     setState({ ...state, content: newContent });
   };
 
@@ -28,9 +37,11 @@ const Quote: React.FC<QuoteProps> = ({ editorState, idx }) => {
 
   return (
     <textarea
+      ref={blockRef}
       onKeyDown={handleKeyPress}
       onChange={handleChange}
       value={state.content[idx].text}
+      className="bg-transparent border italic border-zinc-200 text-zinc-200 pt-3 pb-2 px-4 h-24 rounded-md focus:ring ring-blue-200"
       placeholder="Write a quote"
     ></textarea>
   );
