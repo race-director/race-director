@@ -203,11 +203,6 @@ const Auth: React.FC<AuthProps> = () => {
                         </div>
                       </div>
                     )}
-                    {/* <div>
-                        <button onClick={toggleDarkMode}>
-                          Toggle dark mode
-                        </button>
-                      </div> */}
                   </div>
                 </motion.div>
               )}

@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -8,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { user } from "../../../types";
 import { firebaseApp } from "../../../utils/firebase";
+import { toTitleCase } from "../../../utils/other";
 import { Backdrop, Modal } from "../../Menus";
 import { FALLBACK_PHOTO_URL } from "../Auth/Auth";
 
@@ -24,41 +26,50 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [error, setError] = useState<null | FirebaseError>();
 
   useEffect(() => {
     if (!state) {
       setEmail("");
       setPassword("");
       setUsername("");
+      setError(null);
     }
   }, [state]);
 
   const signIn = async () => {
     const auth = getAuth(firebaseApp);
-    await signInWithEmailAndPassword(auth, email, password);
-    setState(null);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setState(null);
+    } catch (err) {
+      setError(err as FirebaseError);
+    }
   };
 
   const signUp = async () => {
     const auth = getAuth(firebaseApp);
-    const { user } = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
-    let newUser: user = {
-      email: email,
-      uid: user.uid,
-      displayName: username,
-      photoURL: FALLBACK_PHOTO_URL,
-      bio: "",
-      followers: 0,
-      following: 0,
-    };
-    await setDoc(userRef, newUser, { merge: true });
-
-    setState(null);
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
+      let newUser: user = {
+        email: email,
+        uid: user.uid,
+        displayName: username,
+        photoURL: FALLBACK_PHOTO_URL,
+        bio: "",
+        followers: 0,
+        following: 0,
+      };
+      await setDoc(userRef, newUser, { merge: true });
+      setState(null);
+    } catch (error) {
+      setError(error as FirebaseError);
+    }
   };
 
   return (
@@ -163,7 +174,27 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-8">
+                  <AnimatePresence>
+                    {error && (
+                      <motion.div
+                        className="pt-1"
+                        initial={{ height: 0 }}
+                        animate={{ height: "auto" }}
+                        exit={{ height: 0 }}
+                      >
+                        <p className="font-semibold text-red-500">
+                          Error:{" "}
+                          {toTitleCase(
+                            error.message
+                              .replace("Firebase: Error ", "")
+                              .replace("(", "")
+                              .replace(")", "")
+                          )}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-1">
                     <button
                       onClick={close}
                       className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
