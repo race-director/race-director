@@ -4,6 +4,7 @@ import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { user } from "../../../types";
+import { FALLBACK_PHOTO_URL } from "../../Navigation/Auth/Auth";
 
 const useFirebaseUser = (app: FirebaseApp): [user, boolean] => {
   const auth = getAuth(app);
@@ -19,9 +20,14 @@ const useFirebaseUser = (app: FirebaseApp): [user, boolean] => {
       setFirebaseUser(userDoc.data() as user);
       setFirebaseLoading(false);
     } else {
-      const newUser = {
+      const newUser: user = {
         email: user.email,
         uid: user.uid,
+        bio: "",
+        displayName: "",
+        photoURL: FALLBACK_PHOTO_URL,
+        followers: 0,
+        following: 0,
       };
       setDoc(userRef, newUser, { merge: true });
       setFirebaseUser(newUser);

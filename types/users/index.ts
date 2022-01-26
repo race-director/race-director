@@ -8,9 +8,11 @@
 type user = {
   email: string | null;
   uid: string;
-  bio?: string;
-  displayName?: string;
-  photoURL?: string;
+  bio: string;
+  displayName: string;
+  photoURL: string;
+  followers: number;
+  following: number;
 } | null;
 
 export type { user };

@@ -29,7 +29,7 @@ const StudioPage: React.FC<StudioPageProps> = () => {
             <div className="grid gap-6 px-4 py-8 md:py-12">
               <h1 className="text-4xl text-zinc-200 font-bold">Your posts</h1>
               <div className="grid gap-4">
-                {!loading && snapshot ? (
+                {!loading && snapshot?.length ? (
                   snapshot.map((p) => {
                     const { coverImage, headline, summary } =
                       p as unknown as editorContent;
@@ -55,7 +55,7 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                     );
                   })
                 ) : (
-                  <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden">
+                  <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden px-4">
                     <div className="text-zinc-200 py-4">
                       <h1 className="text-2xl font-bold tracking-tighter">
                         You have not written any posts yet

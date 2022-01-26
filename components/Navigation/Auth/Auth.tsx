@@ -60,7 +60,7 @@ const Auth: React.FC<AuthProps> = () => {
           <div className="relative">
             <div
               onClick={() => setExpandedMenuState(!expandedMenuState)}
-              className="flex space-x-0 items-center justify-center"
+              className="flex space-x-0 items-center justify-center cursor-pointer"
             >
               <div className="rounded-full h-8 w-8 border-2 dark:border-zinc-200/80 border-zinc-700/80 overflow-hidden">
                 <Image height={32} width={32} src={photoUrl} alt="Profile" />

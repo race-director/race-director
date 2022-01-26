@@ -47,16 +47,16 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
       password
     );
     const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
-    await setDoc(
-      userRef,
-      {
-        email: email,
-        uid: user.uid,
-        displayName: username,
-        photoURL: FALLBACK_PHOTO_URL,
-      } as user,
-      { merge: true }
-    );
+    let newUser: user = {
+      email: email,
+      uid: user.uid,
+      displayName: username,
+      photoURL: FALLBACK_PHOTO_URL,
+      bio: "",
+      followers: 0,
+      following: 0,
+    };
+    await setDoc(userRef, newUser, { merge: true });
 
     setState(null);
   };
