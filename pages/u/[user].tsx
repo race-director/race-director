@@ -17,7 +17,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData }) => {
   return (
     <div>
       <AnimatePresence>
-        {process.env.NODE_ENV === "development" ? (
+        {process.env.NODE_ENV !== "development" ? (
           <Backdrop onClick={() => router.back()}>
             <Modal>
               <div className="p-8 grid gap-4">
