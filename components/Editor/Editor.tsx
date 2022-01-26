@@ -143,19 +143,19 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
             className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
             onClick={() => createBlock("paragraph")}
           >
-            Add Paragraph
+            Paragraph
           </button>
           <button
             className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
             onClick={() => createBlock("subheading")}
           >
-            Add Subheading
+            Subheading
           </button>
           <button
             className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
             onClick={() => createBlock("quote")}
           >
-            Add Quote
+            Quote
           </button>
           <button
             className="bg-red-600 col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"

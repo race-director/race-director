@@ -103,7 +103,9 @@ const PostPage: React.FC<PostPageProps> = ({
             <div className="px-4 prose prose-sm md:prose-base prose-zinc max-w-3xl w-screen dark:prose-invert font-sans md:prose-h1:text-5xl prose-h1:text-4xl prose-h2:text-2xl md:prose-h2:text-3xl py-8 md:py-12">
               <div>
                 <h1>{post.metadata.headline}</h1>
-                <p>{post.metadata.summary}</p>
+                <p className="italic font-semibold text-lg">
+                  {post.metadata.summary}
+                </p>
               </div>
               {author && (
                 <div className="not-prose flex">
