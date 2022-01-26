@@ -65,6 +65,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
                   <div className="lg:h-[36rem] h-[20rem] md:h-[30rem] relative">
                     <div className="h-full w-full object-cover overflow-hidden">
                       <Image
+                        priority
                         alt={posts[0].coverImage.coverImageCaption}
                         src={posts[0].coverImage.coverImageUrl}
                         layout="fill"
