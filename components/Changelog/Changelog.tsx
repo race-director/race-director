@@ -1,4 +1,5 @@
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Backdrop, Modal } from "../Menus";
 
@@ -76,10 +77,12 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                     machine
                   </p>
                   <p className="text-zinc-200/70">
-                    I also need you to know that I will collect user data with
-                    the sole purpose of improving the product. If any of this
-                    changes you will see a message like this one informing you
-                    of any such changes.
+                    By using this website you are accepting the use of your data
+                    to offer a better experience. Please refer to the{" "}
+                    <Link href={"/legal/privacy"}>
+                      <a className="underline">privacy policy</a>
+                    </Link>{" "}
+                    to learn more
                   </p>
                 </div>
                 <div className="grid gap-3 pt-4">
