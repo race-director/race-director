@@ -35,9 +35,7 @@ const Auth: React.FC<AuthProps> = () => {
                 <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
                   Light mode is still not available.
                 </h1>
-                <p className="text-zinc-200/70">
-                  It will be, it just isn't yet
-                </p>
+                <p className="text-zinc-200/70">It will be, just not yet</p>
                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
                   <button
                     onClick={() => toggleDarkMode()}
