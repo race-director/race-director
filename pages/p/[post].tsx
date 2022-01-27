@@ -114,7 +114,7 @@ const PostPage: React.FC<PostPageProps> = ({
                       <div className="flex space-x-4 not-prose items-center">
                         <Image
                           alt="Author Profile"
-                          className="rounded-full"
+                          className="rounded-full object-cover"
                           width={64}
                           height={64}
                           src={author.photoURL || FALLBACK_PHOTO_URL}
