@@ -20,8 +20,10 @@ import { generateAlphanumericStr } from "../other";
 const generatePostId = (s: string) => {
   const postId =
     s
+      .replaceAll("-", "")
       .replaceAll(" ", "-")
       .replace(/[^a-zA-Z0-9-]/g, "")
+      .replaceAll("--", "-")
       .toLowerCase() + `-${generateAlphanumericStr(20)}`;
 
   return postId;
