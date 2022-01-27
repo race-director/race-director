@@ -25,7 +25,7 @@ const ServerError: React.FC<ServerErrorProps> = () => {
           to database quota being exceeded. Please wait until this is fixed
         </h1>
         <p className="text-lg text-zinc-200/80">
-          I'm really sorry for the inconvenience
+          I&apos;m really sorry for the inconvenience
         </p>
 
         <div className="flex space-x-2">
