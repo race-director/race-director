@@ -53,11 +53,11 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                   <p className="text-zinc-200/70">
                     Hi! I&apos;m Axel Padilla, the creator of Race Director.
                     Following the announcement of DriveTribe&apos;s shutdown, I
-                    have been working incredibly hard in order to get this up an
-                    running as quickly as possible.
+                    have been working incredibly hard in order to get this up
+                    and running as quickly as possible.
                   </p>
                   <p className="text-zinc-200/70">
-                    Building a plattform like this is no easy task, which is why
+                    Building a platform like this is no easy task, which is why
                     I know there is plenty of work to do. Race Director is
                     currently in a really early stage, where only the very basic
                     things are working.
