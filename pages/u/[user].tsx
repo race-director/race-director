@@ -59,7 +59,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
           <div className="grid md:grid-cols-4 grid-cols-1 gap-6 md:gap-8">
             <div className="grid items-center justify-center">
               <Image
-                className="rounded-full"
+                className="rounded-full object-cover"
                 src={userData?.photoURL || ""}
                 height={190}
                 width={190}
