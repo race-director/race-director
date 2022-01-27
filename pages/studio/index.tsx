@@ -78,21 +78,23 @@ const StudioPage: React.FC<StudioPageProps> = () => {
           </p>
         </div>
       )}
-      <Link href="/studio/new">
-        <a className="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-red-600 h-16 w-16 rounded-full grid items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 0 24 24"
-            width="24px"
-            fill="#000000"
-            className="fill-zinc-50 h-10 w-10"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-          </svg>
-        </a>
-      </Link>
+      {user && (
+        <Link href="/studio/new">
+          <a className="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-red-600 h-16 w-16 rounded-full grid items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="#000000"
+              className="fill-zinc-50 h-10 w-10"
+            >
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+          </a>
+        </Link>
+      )}
     </div>
   );
 };

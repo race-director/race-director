@@ -11,10 +11,12 @@ interface PostCardProps {
   post: post;
   href: string;
   isLast: boolean;
-  loadMore: () => void;
+  loadMore?: () => void;
+  priority?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
+  priority,
   post,
   href,
   isLast,
@@ -24,22 +26,24 @@ const PostCard: React.FC<PostCardProps> = ({
   const [timesIntersected, setTimesIntersected] = useState<number>(0);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      () => setTimesIntersected((t) => t + 1),
-      { threshold: 0.25 }
-    );
-    if (isLast) {
-      let target = document.getElementById(post.id);
-      observer.observe(target as Element);
-    }
+    if (loadMore) {
+      const observer = new IntersectionObserver(
+        () => setTimesIntersected((t) => t + 1),
+        { threshold: 0.25 }
+      );
+      if (isLast) {
+        let target = document.getElementById(post.id);
+        observer.observe(target as Element);
+      }
 
-    return () => {
-      observer.disconnect();
-    };
+      return () => {
+        observer.disconnect();
+      };
+    }
   }, []);
 
   useEffect(() => {
-    if (timesIntersected === 2) {
+    if (timesIntersected === 2 && loadMore) {
       loadMore();
     }
   }, [timesIntersected]);
@@ -58,6 +62,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <a>
           <div className="aspect-video object-cover relative">
             <Image
+              priority={priority}
               src={post.coverImage.coverImageUrl}
               alt={post.coverImage.coverImageCaption}
               layout="fill"

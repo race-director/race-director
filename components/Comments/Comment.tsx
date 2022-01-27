@@ -14,6 +14,7 @@ import { Auth } from "../../pages/_app";
 import { comment, commentLike, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
 import { Anchorme } from "react-anchorme";
+import Link from "next/link";
 
 interface CommentProps {
   comment: comment;
@@ -82,23 +83,25 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     }
   }, [likeData, likeLoading]);
 
-  const { displayName, photoURL } = (authorSnap?.data() as user) || {};
+  const { displayName, photoURL, uid } = (authorSnap?.data() as user) || {};
 
   return (
     <>
       {!authorLoading && (
         <div className="border grid gap-2 border-x-0 border-t-0 border-zinc-600/60 py-4">
           <div className="flex w-full justify-between">
-            <div className="flex space-x-3 items-center font-semibold">
-              <Image
-                alt={displayName}
-                src={photoURL || ""}
-                height={32}
-                width={32}
-                className="rounded-full"
-              ></Image>
-              <p className="text-sm">{displayName}</p>
-            </div>
+            <Link href={`/u/${uid}`}>
+              <a className="flex space-x-3 items-center font-semibold">
+                <Image
+                  alt={displayName}
+                  src={photoURL || ""}
+                  height={32}
+                  width={32}
+                  className="rounded-full"
+                ></Image>
+                <p className="text-sm">{displayName}</p>
+              </a>
+            </Link>
             <div className="flex space-x-4">
               <button
                 className="flex space-x-1 items-center"
