@@ -59,38 +59,41 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
   const signUp = async () => {
     const auth = getAuth(firebaseApp);
     try {
-      throw new Error(
-        "Race Director is on invite-only mode. Contact me for an invite."
-      );
-      // if (username && email && password) {
-      //   const { user } = await createUserWithEmailAndPassword(
-      //     auth,
-      //     email,
-      //     password
-      //   );
-      //   const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
-      //   let newUser: user = {
-      //     email: email,
-      //     uid: user.uid,
-      //     displayName: username,
-      //     photoURL: FALLBACK_PHOTO_URL,
-      //     bio: "",
-      //     followers: 0,
-      //     following: 0,
-      //   };
-      //   await setDoc(userRef, newUser, { merge: true });
-      //   setState(null);
-      // } else {
-      //   if (!username) {
-      //     throw new Error("Race Director: Username is required");
-      //   }
-      //   if (!email) {
-      //     throw new Error("Race Director: Email is required");
-      //   }
-      //   if (!password) {
-      //     throw new Error("Race Director: Password is required");
-      //   }
-      // }
+      if (process.env.NODE_ENV === "development") {
+        if (username && email && password) {
+          const { user } = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
+          let newUser: user = {
+            email: email,
+            uid: user.uid,
+            displayName: username,
+            photoURL: FALLBACK_PHOTO_URL,
+            bio: "",
+            followers: 0,
+            following: 0,
+          };
+          await setDoc(userRef, newUser, { merge: true });
+          setState(null);
+        } else {
+          if (!username) {
+            throw new Error("Race Director: Username is required");
+          }
+          if (!email) {
+            throw new Error("Race Director: Email is required");
+          }
+          if (!password) {
+            throw new Error("Race Director: Password is required");
+          }
+        }
+      } else {
+        throw new Error(
+          "Race Director is on invite-only mode. Contact me for an invite."
+        );
+      }
     } catch (error) {
       setError(error as FirebaseError);
     }
