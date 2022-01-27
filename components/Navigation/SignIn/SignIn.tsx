@@ -40,8 +40,17 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
   const signIn = async () => {
     const auth = getAuth(firebaseApp);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setState(null);
+      if (email && password) {
+        await signInWithEmailAndPassword(auth, email, password);
+        setState(null);
+      } else {
+        if (!email) {
+          throw new Error("Race Director: Email is required");
+        }
+        if (!password) {
+          throw new Error("Race Director: Password is required");
+        }
+      }
     } catch (err) {
       setError(err as FirebaseError);
     }
@@ -50,23 +59,35 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
   const signUp = async () => {
     const auth = getAuth(firebaseApp);
     try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
-      let newUser: user = {
-        email: email,
-        uid: user.uid,
-        displayName: username,
-        photoURL: FALLBACK_PHOTO_URL,
-        bio: "",
-        followers: 0,
-        following: 0,
-      };
-      await setDoc(userRef, newUser, { merge: true });
-      setState(null);
+      if (username && email && password) {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const userRef = doc(getFirestore(firebaseApp), `users/${user.uid}`);
+        let newUser: user = {
+          email: email,
+          uid: user.uid,
+          displayName: username,
+          photoURL: FALLBACK_PHOTO_URL,
+          bio: "",
+          followers: 0,
+          following: 0,
+        };
+        await setDoc(userRef, newUser, { merge: true });
+        setState(null);
+      } else {
+        if (!username) {
+          throw new Error("Race Director: Username is required");
+        }
+        if (!email) {
+          throw new Error("Race Director: Email is required");
+        }
+        if (!password) {
+          throw new Error("Race Director: Password is required");
+        }
+      }
     } catch (error) {
       setError(error as FirebaseError);
     }
@@ -183,13 +204,7 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                         exit={{ height: 0 }}
                       >
                         <p className="font-semibold text-red-500">
-                          Error:{" "}
-                          {toTitleCase(
-                            error.message
-                              .replace("Firebase: Error ", "")
-                              .replace("(", "")
-                              .replace(")", "")
-                          )}
+                          Error: {toTitleCase(error.message)}
                         </p>
                       </motion.div>
                     )}
