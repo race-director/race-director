@@ -59,13 +59,13 @@ const PostCard: React.FC<PostCardProps> = ({
     <div className="shadow-lg overflow-hidden rounded-md" id={post.id}>
       <Link href={`/p/${post.id}`}>
         <a>
-          <div className="aspect-video object-cover relative">
+          <div className="aspect-video relative bg-black">
             <Image
               priority={priority}
               src={post.coverImage.coverImageUrl}
               alt={post.coverImage.coverImageCaption}
               layout="fill"
-              objectFit="cover"
+              objectFit="contain"
             ></Image>
           </div>
         </a>

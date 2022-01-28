@@ -89,10 +89,10 @@ const PostPage: React.FC<PostPageProps> = ({
           <HeadMetadata href={`${host}p/${post.id}`} post={post}></HeadMetadata>
           <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
             <Navigation></Navigation>
-            <div className="relative w-full max-w-4xl z-0 aspect-video">
+            <div className="relative w-full max-w-4xl z-0 aspect-video bg-black">
               <Image
                 layout="fill"
-                className="object-cover"
+                objectFit="contain"
                 src={post.coverImage.coverImageUrl}
                 alt={post.coverImage.coverImageCaption}
               ></Image>
