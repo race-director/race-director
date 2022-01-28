@@ -9,12 +9,14 @@ import {
   Query,
   where,
 } from "firebase/firestore";
+import { AnimatePresence } from "framer-motion";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { Backdrop, Modal } from "../../components/Menus";
 import { Navigation } from "../../components/Navigation";
 import { PostCard } from "../../components/Post";
 import { post, user } from "../../types";
@@ -35,6 +37,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
   const postQuery = query(postCollection, orderPostsBy, wherePosts, limit(10));
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [user] = useContext(Auth);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -53,6 +56,34 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
       <Head>
         <title>{userData?.displayName}&apos;s Profile</title>
       </Head>
+      <AnimatePresence>
+        {isEditOpen && (
+          <Backdrop onClick={() => setIsEditOpen(false)}>
+            <Modal>
+              <div className="p-8 grid gap-4">
+                <h1 className="text-2xl text-zinc-200/90 font-bold uppercase">
+                  This feature is not implemented yet!
+                </h1>
+                <p className="text-zinc-200/70">It will be, just not yet</p>
+                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                  <button
+                    onClick={() => setIsEditOpen(false)}
+                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                  >
+                    Okay
+                  </button>
+                  <button
+                    onClick={() => setIsEditOpen(false)}
+                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </Backdrop>
+        )}
+      </AnimatePresence>
       <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
         <Navigation></Navigation>
         <div className="px-4 max-w-4xl w-screen dark:prose-invert font-sans py-8 md:py-12">
@@ -77,7 +108,10 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
                     "Your bio goes here. Only you can see this message.")}
               </p>
               <div className="pt-2 flex space-x-2">
-                <button className="bg-red-600 disabled:cursor-not-allowed px-6 py-1 font-bold transition-all transform active:scale-95 hover:bg-red-700 uppercase text-zinc-200 rounded-md">
+                <button
+                  onClick={() => setIsEditOpen(true)}
+                  className="bg-red-600 disabled:cursor-not-allowed px-6 py-1 font-bold transition-all transform active:scale-95 hover:bg-red-700 uppercase text-zinc-200 rounded-md"
+                >
                   {isOwnProfile ? "Edit Profile" : "Follow"}
                 </button>
               </div>
