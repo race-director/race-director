@@ -21,8 +21,9 @@ const ServerError: React.FC<ServerErrorProps> = () => {
           Race Director
         </div>
         <h1 className="text-3xl md:text-4xl font-black text-zinc-200 text-center">
-          (500) <br /> The server is currently experiencing some issues related
-          to database quota being exceeded. Please wait until this is fixed
+          (500) <br /> The server is currently in a scheduled maintenance.
+          Please check again in a couple of hours while I get ready to open the
+          beta!.
         </h1>
         <p className="text-lg text-zinc-200/80">
           I&apos;m really sorry for the inconvenience
