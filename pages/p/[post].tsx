@@ -67,13 +67,13 @@ const PostPage: React.FC<PostPageProps> = ({
   }, []);
 
   // Update post score every time data changes
-  useEffect(() => {
-    if (post) {
-      updateDoc(doc(db, `posts`, post.id), {
-        score: ratePost(post),
-      });
-    }
-  }, [post]);
+  // useEffect(() => {
+  //   if (post) {
+  //     updateDoc(doc(db, `posts`, post.id), {
+  //       score: ratePost(post),
+  //     });
+  //   }
+  // }, [post]);
 
   // Use the snapshot listener and set the post state
   useEffect(() => {
@@ -210,7 +210,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
     const commentQ = query(
       collection(db, `posts/${post}/comments`),
       orderBy("createdAt", "desc"),
-      limit(3)
+      limit(5)
     );
     const commentsSnapshot = await getDocs(commentQ);
     let comments: comment[] = [];

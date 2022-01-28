@@ -22,7 +22,6 @@ const PostCard: React.FC<PostCardProps> = ({
   isLast,
   loadMore,
 }) => {
-  const db = getFirestore(firebaseApp);
   const [timesIntersected, setTimesIntersected] = useState<number>(0);
 
   useEffect(() => {
@@ -48,13 +47,13 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   }, [timesIntersected]);
 
-  useEffect(() => {
-    if (post) {
-      updateDoc(doc(db, `posts`, post.id), {
-        score: ratePost(post),
-      });
-    }
-  }, [post]);
+  // useEffect(() => {
+  //   if (post) {
+  //     updateDoc(doc(db, `posts`, post.id), {
+  //       score: ratePost(post),
+  //     });
+  //   }
+  // }, [post]);
 
   return (
     <div className="shadow-lg overflow-hidden rounded-md" id={post.id}>

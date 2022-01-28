@@ -23,31 +23,31 @@ interface HomePageProps {
   host: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
-  const [posts, setPosts] = useState<post[]>(initialPosts);
-  const [currQuery, setCurrQuery] = useState<Promise<
-    Query<DocumentData>
-  > | null>(null);
+const HomePage: React.FC<HomePageProps> = ({ posts, host }) => {
+  // const [posts, setPosts] = useState<post[]>(initialPosts);
+  // const [currQuery, setCurrQuery] = useState<Promise<
+  //   Query<DocumentData>
+  // > | null>(null);
 
-  useEffect(() => {
-    loadMore();
-  }, []);
+  // useEffect(() => {
+  //   loadMore();
+  // }, []);
 
-  const loadMore = async () => {
-    if (currQuery) {
-      const q = constructQuery(await currQuery);
-      const documentSnapshots = await getDocs(await q);
-      let newPosts: post[] = [];
-      documentSnapshots.forEach((doc) => {
-        newPosts.push(doc.data() as post);
-      });
-      setPosts([...posts, ...newPosts]);
-      setCurrQuery(q);
-    } else {
-      const q = constructQuery();
-      setCurrQuery(q);
-    }
-  };
+  // const loadMore = async () => {
+  //   if (currQuery) {
+  //     const q = constructQuery(await currQuery);
+  //     const documentSnapshots = await getDocs(await q);
+  //     let newPosts: post[] = [];
+  //     documentSnapshots.forEach((doc) => {
+  //       newPosts.push(doc.data() as post);
+  //     });
+  //     setPosts([...posts, ...newPosts]);
+  //     setCurrQuery(q);
+  //   } else {
+  //     const q = constructQuery();
+  //     setCurrQuery(q);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900 pb-12">
@@ -143,7 +143,6 @@ const HomePage: React.FC<HomePageProps> = ({ posts: initialPosts, host }) => {
                       href={`${host}p/${p.id}`}
                       post={p}
                       key={idx}
-                      loadMore={loadMore}
                     ></PostCard>
                   );
               })}
@@ -172,7 +171,7 @@ export const getServerSideProps: GetServerSideProps<
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
     orderBy("score", "desc"),
-    limit(7)
+    limit(50)
   );
 
   const postRes = await getDocs(postsQ);
