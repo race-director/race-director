@@ -170,7 +170,7 @@ export const getServerSideProps: GetServerSideProps<
 > = async () => {
   const postsQ = query(
     collection(getFirestore(firebaseApp), "posts"),
-    orderBy("score", "desc"),
+    orderBy("metadata.likeCount", "desc"),
     limit(50)
   );
 

@@ -30,7 +30,7 @@ interface UserPageProps {
 const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
   const router = useRouter();
   const postCollection = collection(getFirestore(firebaseApp), "posts");
-  const orderPostsBy = orderBy("score", "desc");
+  const orderPostsBy = orderBy("metadata.createdAt", "desc");
   const wherePosts = where("metadata.author", "==", userData?.uid);
   const postQuery = query(postCollection, orderPostsBy, wherePosts, limit(10));
   const [isOwnProfile, setIsOwnProfile] = useState(false);
