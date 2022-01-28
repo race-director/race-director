@@ -21,9 +21,9 @@ const ServerError: React.FC<ServerErrorProps> = () => {
           Race Director
         </div>
         <h1 className="text-3xl md:text-4xl font-black text-zinc-200 text-center">
-          (500) <br /> The server is currently in a scheduled maintenance.
-          Please check again in a couple of hours while I get ready to open the
-          beta!.
+          (500) <br /> The server is currently shut down because of the database
+          quota being reached. Quota renews daily, so check again in a couple of
+          hours.
         </h1>
         <p className="text-lg text-zinc-200/80">
           I&apos;m really sorry for the inconvenience
