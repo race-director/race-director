@@ -1,26 +1,24 @@
 import {
   collection,
   doc,
+  DocumentData,
   getDoc,
   getFirestore,
   limit,
   orderBy,
-  query,
-  Query,
+  QueryDocumentSnapshot,
   where,
 } from "firebase/firestore";
 import { AnimatePresence } from "framer-motion";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Backdrop, Modal } from "../../components/Menus";
 import { Navigation } from "../../components/Navigation";
 import { PostCard } from "../../components/Post";
 import { post, user } from "../../types";
-import { firebaseApp } from "../../utils/firebase";
+import { firebaseApp, paginateQuery } from "../../utils/firebase";
 import { Auth } from "../_app";
 
 interface UserPageProps {
@@ -30,14 +28,46 @@ interface UserPageProps {
 
 // TODO: pagination
 const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
-  const router = useRouter();
-  const postCollection = collection(getFirestore(firebaseApp), "posts");
-  const orderPostsBy = orderBy("metadata.createdAt", "desc");
-  const wherePosts = where("metadata.author", "==", userData?.uid);
-  const postQuery = query(postCollection, orderPostsBy, wherePosts, limit(10));
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [user] = useContext(Auth);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [posts, setPosts] = useState<post[]>([]);
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData>>();
+
+  useEffect(() => {
+    loadMore();
+  }, []);
+
+  const loadMore = async (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
+    const db = getFirestore(firebaseApp);
+    const postCollection = collection(db, "posts");
+    const orderPostsBy = orderBy("metadata.createdAt", "desc");
+    const wherePosts = where("metadata.author", "==", userData?.uid);
+    const queryLimit = limit(2);
+    if (lastDoc) {
+      paginateQuery(
+        postCollection,
+        [orderPostsBy, queryLimit, wherePosts],
+        lastDoc
+      ).then((docs) => {
+        const lastVisible = docs.docs[docs.docs.length - 1];
+        setLastDoc(lastVisible);
+        let posts = docs.docs.map((doc) => doc.data() as post);
+        setPosts((prevPosts) => [...prevPosts, ...posts]);
+      });
+    } else {
+      paginateQuery(postCollection, [
+        orderPostsBy,
+        queryLimit,
+        wherePosts,
+      ]).then((docs) => {
+        const lastVisible = docs.docs[docs.docs.length - 1];
+        setLastDoc(lastVisible);
+        let posts = docs.docs.map((doc) => doc.data() as post);
+        setPosts((prevPosts) => [...prevPosts, ...posts]);
+      });
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -46,10 +76,6 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
       setIsOwnProfile(false);
     }
   }, [user]);
-
-  const [posts, postLoading] = useCollectionData<post>(
-    postQuery as Query<post>
-  );
 
   return (
     <div>
@@ -136,19 +162,16 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
               {userData?.displayName}&apos;s posts
             </h1>
             <div className="grid gap-4">
-              {!postLoading &&
-                posts?.map((p, idx) => (
-                  <PostCard
-                    priority={idx === 0}
-                    isLast={idx === posts.length - 1}
-                    href={`${host}p/${p.id}`}
-                    post={p}
-                    key={idx}
-                  ></PostCard>
-                ))}
-              <button className="px-4 py-2 text-center border-zinc-200 border-2 rounded-md font-semibold text-zinc-200 hover:bg-zinc-800 transition-all active:scale-95 transform">
-                Load more
-              </button>
+              {posts?.map((p, idx) => (
+                <PostCard
+                  priority={idx === 0}
+                  isLast={idx === posts.length - 1}
+                  href={`${host}p/${p.id}`}
+                  post={p}
+                  key={idx}
+                  loadMore={() => loadMore(lastDoc)}
+                ></PostCard>
+              ))}
             </div>
           </div>
         </div>
