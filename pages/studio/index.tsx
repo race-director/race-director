@@ -80,7 +80,7 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                           <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden">
                             <div className="lg:h-44 aspect-video bg-black">
                               <img
-                                className="object-cover w-full"
+                                className="object-contain h-full w-full"
                                 src={coverImage.coverImageUrl}
                               ></img>
                             </div>

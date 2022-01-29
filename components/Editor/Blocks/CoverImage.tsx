@@ -69,7 +69,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
         </>
       ) : (
         <img
-          className="rounded-md object-cover border border-zinc-200 aspect-video"
+          className="rounded-md object-contain border border-zinc-200 aspect-video w-full bg-black"
           src={editorState.coverImage.coverImageUrl}
         ></img>
       )}

@@ -32,6 +32,7 @@ export interface block {
 const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   const [user] = useContext(Auth);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState<Error | null>(null);
   const [editorState, setEditorState] = useState<editorContent>(
@@ -47,10 +48,12 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   );
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await submitPost(editorState, user);
       router.push("/studio");
     } catch (error) {
+      setLoading(false);
       setError(error as Error);
     }
   };
@@ -158,7 +161,8 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
             Quote
           </button>
           <button
-            className="bg-red-600 col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+            disabled={loading}
+            className="bg-red-600 disabled:opacity-70 disabled:hover-bg-red-600 disabled:cursor-not-allowed col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
             onClick={handleSubmit}
           >
             Publish

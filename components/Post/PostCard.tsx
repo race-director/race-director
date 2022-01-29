@@ -1,11 +1,8 @@
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { CommentPostButton, LikePostButton, SharePostButton } from ".";
 import { post } from "../../types";
-import { firebaseApp } from "../../utils/firebase";
-import { ratePost } from "../../utils/other";
 
 interface PostCardProps {
   post: post;
@@ -46,14 +43,6 @@ const PostCard: React.FC<PostCardProps> = ({
       loadMore();
     }
   }, [timesIntersected]);
-
-  // useEffect(() => {
-  //   if (post) {
-  //     updateDoc(doc(db, `posts`, post.id), {
-  //       score: ratePost(post),
-  //     });
-  //   }
-  // }, [post]);
 
   return (
     <div className="shadow-lg overflow-hidden rounded-md" id={post.id}>
