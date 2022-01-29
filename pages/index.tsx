@@ -61,8 +61,8 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
       <Navigation></Navigation>
       <div className="max-w-screen-2xl w-full flex flex-col">
         <div className="grid lg:grid-cols-8 lg:grid-rows-2 grid-rows-1 grid-cols-2">
-          {posts[0] && (
-            <div className="lg:col-span-5 col-span-5 lg:row-span-2 row-span-1">
+          <div className="lg:col-span-5 col-span-5 lg:row-span-2 row-span-1 bg-black border-zinc-200">
+            {posts[0] && (
               <Link href={`/p/${posts[0].id}`}>
                 <a>
                   <div className="lg:h-[36rem] h-[20rem] md:h-[30rem] relative">
@@ -83,10 +83,10 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                   </div>
                 </a>
               </Link>
-            </div>
-          )}
-          {posts[1] && (
-            <div className="lg:col-span-3 lg:h-72 h-60">
+            )}
+          </div>
+          <div className="lg:col-span-3 lg:h-72 h-60 bg-black border-zinc-200">
+            {posts[1] && (
               <Link href={`/p/${posts[1].id}`}>
                 <a className="">
                   <div className="h-full w-full relative">
@@ -106,10 +106,10 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                   </div>
                 </a>
               </Link>
-            </div>
-          )}
-          {posts[2] && (
-            <div className="col-span-3 lg:h-72 h-60">
+            )}
+          </div>
+          <div className="col-span-3 lg:h-72 h-60 bg-black border-zinc-200">
+            {posts[2] && (
               <Link href={`/p/${posts[2].id}`}>
                 <a className="">
                   <div className="h-full w-full relative">
@@ -129,8 +129,8 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                   </div>
                 </a>
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         <div className="px-4 lg:px-10 pt-6 lg:pt-12 grid lg:grid-cols-12 gap-6">
           <div className="grid gap-4 lg:col-span-7">
