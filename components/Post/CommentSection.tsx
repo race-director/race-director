@@ -1,44 +1,62 @@
 import {
   collection,
   doc,
+  DocumentData,
   getFirestore,
   increment,
   limit,
   orderBy,
-  query,
+  QueryDocumentSnapshot,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Auth } from "../../pages/_app";
 import { comment, post } from "../../types";
-import { firebaseApp } from "../../utils/firebase";
-import { generateAlphanumericStr, loadMoreComments } from "../../utils/other";
+import { firebaseApp, paginateQuery } from "../../utils/firebase";
+import { generateAlphanumericStr } from "../../utils/other";
 import { Comment } from "../Comments";
 
 interface CommentSectionProps {
   post: post;
-  initialComments: comment[];
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({
-  post,
-  initialComments,
-}) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
   const db = getFirestore(firebaseApp);
   const [user] = useContext(Auth);
-  const [commentContent, setCommentContent] = useState<string>("");
-  const [comments, setComments] = useState<comment[]>(initialComments);
-  const [commentAmount, setCommentAmount] = useState(3);
-  const [commentsSnapshot, commentsLoading] = useCollectionData(
-    query(
-      collection(db, `posts/${post?.id}/comments`),
-      orderBy("createdAt", "desc"),
-      limit(commentAmount)
-    ),
-    { idField: "id" }
+  const [localCommentCount, setLocalCommentCount] = useState(
+    post.metadata.commentCount
   );
+  const [commentContent, setCommentContent] = useState<string>("");
+  const [comments, setComments] = useState<comment[]>([]);
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData>>();
+
+  useEffect(() => {
+    loadMore();
+  }, []);
+
+  const loadMore = (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
+    const postCollection = collection(db, `posts/${post.id}/comments`);
+    const orderPostsBy = orderBy("createdAt", "desc");
+    const queryLimit = limit(3);
+    if (lastDoc) {
+      paginateQuery(postCollection, [orderPostsBy, queryLimit], lastDoc).then(
+        (docs) => {
+          const lastVisible = docs.docs[docs.docs.length - 1];
+          setLastDoc(lastVisible);
+          let comments = docs.docs.map((doc) => doc.data() as comment);
+          setComments((prevComments) => [...prevComments, ...comments]);
+        }
+      );
+    } else {
+      paginateQuery(postCollection, [orderPostsBy, queryLimit]).then((docs) => {
+        const lastVisible = docs.docs[docs.docs.length - 1];
+        setLastDoc(lastVisible);
+        let comments = docs.docs.map((doc) => doc.data() as comment);
+        setComments((prevComments) => [...prevComments, ...comments]);
+      });
+    }
+  };
 
   const submitComment = async () => {
     if (post && user) {
@@ -54,6 +72,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
       setCommentContent("");
 
+      //Update local ui
+      setComments((prevComments) => [newComment, ...prevComments]);
+      setLocalCommentCount(localCommentCount + 1);
+
       // Create new comment document in comments subcollection
       await setDoc(doc(db, `posts/${post.id}/comments`, commentId), newComment);
 
@@ -63,13 +85,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       });
     }
   };
-
-  // Set up the snapshot listener for the comments on the client
-  useEffect(() => {
-    if (!commentsLoading) {
-      setComments(commentsSnapshot?.map((c) => c as unknown as comment) || []);
-    }
-  }, [commentsLoading, commentsSnapshot]);
 
   return (
     <div className="not-prose grid gap-8">
@@ -100,7 +115,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
       <div className="grid gap-2" id="comments">
         <h2 className="text-xl md:text-2xl font-bold">
-          Comments ({post.metadata.commentCount})
+          Comments ({localCommentCount})
         </h2>
         <div className="grid">
           {comments.map((c, idx) => (
@@ -114,14 +129,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             </p>
           </div>
         )}
-        {!(comments.length === post.metadata.commentCount) && (
+        {!(comments.length >= localCommentCount) && (
           <button
             className="py-2 px-4 border-zinc-200/70 border-2 rounded-md font-semibold transform active:scale-95 transition-all"
-            onClick={() =>
-              setCommentAmount(
-                commentAmount + loadMoreComments(post, comments.length)
-              )
-            }
+            onClick={() => loadMore(lastDoc)}
           >
             Load more comments
           </button>

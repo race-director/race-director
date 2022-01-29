@@ -1,22 +1,16 @@
 import { formatDistance, subDays } from "date-fns";
 import {
-  collection,
   doc,
   getDoc,
-  getDocs,
   getFirestore,
   increment,
-  limit,
-  orderBy,
-  query,
   updateDoc,
 } from "firebase/firestore";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import React, { useEffect } from "react";
 import { Navigation } from "../../components/Navigation";
 import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
 import {
@@ -26,38 +20,24 @@ import {
   SharePostButton,
 } from "../../components/Post";
 import CommentSection from "../../components/Post/CommentSection";
-import { comment, post, user } from "../../types";
+import { post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
-import { ratePost } from "../../utils/other";
 
 interface PostPageProps {
   post: post | null;
   markdown: string | null;
   author: user;
-  comments: comment[];
   host: string;
 }
 
 const PostPage: React.FC<PostPageProps> = ({
-  comments: initialComments,
-  post: initialPost,
+  post,
   markdown,
   author,
   host,
 }) => {
   const db = getFirestore(firebaseApp);
-  const [post, setPost] = useState<post | null>(initialPost);
-  const [postData, postLoading, postErr] = useDocumentData(
-    doc(db, `posts/${post?.id}`)
-  );
 
-  useEffect(() => {
-    if (postErr) {
-      console.error(postErr);
-    }
-  }, [postErr]);
-
-  // Update view count
   useEffect(() => {
     if (post) {
       updateDoc(doc(db, `posts`, post.id), {
@@ -65,22 +45,6 @@ const PostPage: React.FC<PostPageProps> = ({
       });
     }
   }, []);
-
-  // Update post score every time data changes
-  // useEffect(() => {
-  //   if (post) {
-  //     updateDoc(doc(db, `posts`, post.id), {
-  //       score: ratePost(post),
-  //     });
-  //   }
-  // }, [post]);
-
-  // Use the snapshot listener and set the post state
-  useEffect(() => {
-    if (!postLoading && postData) {
-      setPost(postData as unknown as post);
-    }
-  }, [postData, postLoading]);
 
   return (
     <>
@@ -157,10 +121,7 @@ const PostPage: React.FC<PostPageProps> = ({
               )}
               {markdown && <Markdown>{markdown}</Markdown>}
               <hr />
-              <CommentSection
-                initialComments={initialComments}
-                post={post}
-              ></CommentSection>
+              <CommentSection post={post}></CommentSection>
             </div>
           </div>
           {/* Bottom bar */}
@@ -207,23 +168,12 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (
     const docData = docRes.data() as post;
     const markdown = await (await fetch(docData.markdownUrl)).text();
     const resAuthor = await getDoc(doc(db, "users", docData.metadata.author));
-    const commentQ = query(
-      collection(db, `posts/${post}/comments`),
-      orderBy("createdAt", "desc"),
-      limit(5)
-    );
-    const commentsSnapshot = await getDocs(commentQ);
-    let comments: comment[] = [];
-    commentsSnapshot.forEach((doc) => {
-      comments.push(doc.data() as comment);
-    });
 
     return {
       props: {
         post: docData,
         markdown: markdown,
         author: resAuthor.data() as user,
-        comments: comments,
         host: `${process.env.HOST}`,
       },
     };
