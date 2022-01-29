@@ -1,12 +1,10 @@
 import {
   collection,
   DocumentData,
-  getDocs,
   getFirestore,
   limit,
   orderBy,
-  Query,
-  query,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -16,38 +14,43 @@ import React, { useEffect, useState } from "react";
 import { Navigation } from "../components/Navigation";
 import { PostCard } from "../components/Post";
 import { post } from "../types";
-import { constructQuery, firebaseApp } from "../utils/firebase";
+import { firebaseApp, paginateQuery } from "../utils/firebase";
 
 interface HomePageProps {
-  posts: post[];
   host: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ posts, host }) => {
-  // const [posts, setPosts] = useState<post[]>(initialPosts);
-  // const [currQuery, setCurrQuery] = useState<Promise<
-  //   Query<DocumentData>
-  // > | null>(null);
+const HomePage: React.FC<HomePageProps> = ({ host }) => {
+  const [posts, setPosts] = useState<post[]>([]);
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData>>();
 
-  // useEffect(() => {
-  //   loadMore();
-  // }, []);
+  useEffect(() => {
+    loadMore();
+  }, []);
 
-  // const loadMore = async () => {
-  //   if (currQuery) {
-  //     const q = constructQuery(await currQuery);
-  //     const documentSnapshots = await getDocs(await q);
-  //     let newPosts: post[] = [];
-  //     documentSnapshots.forEach((doc) => {
-  //       newPosts.push(doc.data() as post);
-  //     });
-  //     setPosts([...posts, ...newPosts]);
-  //     setCurrQuery(q);
-  //   } else {
-  //     const q = constructQuery();
-  //     setCurrQuery(q);
-  //   }
-  // };
+  const loadMore = async (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
+    const db = getFirestore(firebaseApp);
+    const postCollection = collection(db, "posts");
+    const orderPostsBy = orderBy("metadata.likeCount", "desc");
+    const queryLimit = limit(5);
+    if (lastDoc) {
+      paginateQuery(postCollection, [orderPostsBy, queryLimit], lastDoc).then(
+        (docs) => {
+          const lastVisible = docs.docs[docs.docs.length - 1];
+          setLastDoc(lastVisible);
+          let posts = docs.docs.map((doc) => doc.data() as post);
+          setPosts((prevPosts) => [...prevPosts, ...posts]);
+        }
+      );
+    } else {
+      paginateQuery(postCollection, [orderPostsBy, queryLimit]).then((docs) => {
+        const lastVisible = docs.docs[docs.docs.length - 1];
+        setLastDoc(lastVisible);
+        let posts = docs.docs.map((doc) => doc.data() as post);
+        setPosts((prevPosts) => [...prevPosts, ...posts]);
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900 pb-12">
@@ -143,6 +146,7 @@ const HomePage: React.FC<HomePageProps> = ({ posts, host }) => {
                       href={`${host}p/${p.id}`}
                       post={p}
                       key={idx}
+                      loadMore={() => loadMore(lastDoc)}
                     ></PostCard>
                   );
               })}
@@ -168,18 +172,8 @@ const HomePage: React.FC<HomePageProps> = ({ posts, host }) => {
 export const getServerSideProps: GetServerSideProps<
   HomePageProps
 > = async () => {
-  const postsQ = query(
-    collection(getFirestore(firebaseApp), "posts"),
-    orderBy("metadata.likeCount", "desc"),
-    limit(50)
-  );
-
-  const postRes = await getDocs(postsQ);
-  const posts = postRes.docs.map((doc) => doc.data());
-
   return {
     props: {
-      posts: posts as post[],
       host: process.env.HOST || "",
     },
   };
