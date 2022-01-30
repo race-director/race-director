@@ -42,7 +42,7 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
           ></img>
           <div className="flex flex-col justify-center space-y-4">
             <h1 className="text-2xl font-black text-zinc-200/80">
-              Race Director Discord
+              Race Director
             </h1>
             <div>
               <a
@@ -58,30 +58,32 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
         </div>
         <div className="grid gap-2 pt-4">
           <h2 className="text-lg font-semibold text-zinc-200/80">Online</h2>
-          {activity &&
-            activity.members.map((user: any) => {
-              return (
-                <div key={user.id} className="flex space-x-2 items-center">
-                  <div className="relative">
-                    <img
-                      src={user.avatar_url}
-                      height={"30rem"}
-                      width={"30rem"}
-                      className="rounded-full"
-                      alt="Discord avatar"
-                    ></img>
-                    <div
-                      className={`absolute h-2 w-2 rounded-full top-6 right-0 ${
-                        user.status === "online"
-                          ? "bg-green-400"
-                          : "bg-orange-400"
-                      } `}
-                    ></div>
+          <div className="max-h-48 overflow-y-scroll grid grid-cols-2 gap-2">
+            {activity &&
+              activity.members.map((user: any) => {
+                return (
+                  <div key={user.id} className="flex space-x-2 items-center">
+                    <div className="relative">
+                      <img
+                        src={user.avatar_url}
+                        height={"30rem"}
+                        width={"30rem"}
+                        className="rounded-full"
+                        alt="Discord avatar"
+                      ></img>
+                      <div
+                        className={`absolute h-2 w-2 rounded-full top-6 right-0 ${
+                          user.status === "online"
+                            ? "bg-green-400"
+                            : "bg-orange-400"
+                        } `}
+                      ></div>
+                    </div>
+                    <p className="text-zinc-200/70 text-sm">{user.username}</p>
                   </div>
-                  <p className="text-zinc-200/70 text-sm">{user.username}</p>
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>
