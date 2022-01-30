@@ -159,9 +159,6 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
               </h1>
               <div className="grid gap-4 pt-4">
                 <DiscordActivity apiUrl="https://discord.com/api/guilds/937070357444190269/widget.json"></DiscordActivity>
-                <p className="text-xl text-center text-zinc-200/70">
-                  This section is under construction
-                </p>
               </div>
             </div>
           </div>
