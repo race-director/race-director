@@ -27,6 +27,7 @@ import {
 import CommentSection from "../../components/Post/CommentSection";
 import { post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 import { Auth } from "../_app";
 
 interface PostPageProps {
@@ -53,6 +54,13 @@ const PostPage: React.FC<PostPageProps> = ({
     if (post) {
       updateDoc(doc(db, `posts`, post.id), {
         "metadata.viewCount": increment(1),
+        score: ratePost({
+          ...post,
+          metadata: {
+            ...post.metadata,
+            viewCount: post.metadata.viewCount + 1,
+          },
+        }),
       });
     }
   }, []);

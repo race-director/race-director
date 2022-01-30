@@ -16,14 +16,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { Anchorme } from "react-anchorme";
 import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import { Auth } from "../../pages/_app";
-import { comment, commentLike, user } from "../../types";
+import { comment, commentLike, post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 
 interface CommentProps {
   comment: comment;
+  post: post;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment }) => {
+const Comment: React.FC<CommentProps> = ({ comment, post }) => {
   const db = getFirestore(firebaseApp);
   const [loggedInUser] = useContext(Auth);
   const [authorDoc, authorLoading] = useDocumentDataOnce(
@@ -92,6 +94,13 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       const postDoc = doc(db, `posts/${comment.postId}`);
       updateDoc(postDoc, {
         "metadata.commentCount": increment(-1),
+        score: ratePost({
+          ...post,
+          metadata: {
+            ...post.metadata,
+            commentCount: post.metadata.commentCount - 1,
+          },
+        }),
       });
       deleteDoc(commentDoc);
       setIsDeleted(true);

@@ -11,6 +11,7 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { Auth } from "../../pages/_app";
 import { post, postLike } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 
 interface LikePostProps {
   post: post;
@@ -38,6 +39,10 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
         // Update like count
         await updateDoc(postRef, {
           "metadata.likeCount": increment(-1),
+          score: ratePost({
+            ...post,
+            metadata: { ...post.metadata, likeCount: localLikeAmount - 1 },
+          }),
         });
       } else {
         const like: postLike = {
@@ -51,6 +56,10 @@ const LikePost: React.FC<LikePostProps> = ({ post }) => {
         await setDoc(likeRef, like);
         await updateDoc(postRef, {
           "metadata.likeCount": increment(1),
+          score: ratePost({
+            ...post,
+            metadata: { ...post.metadata, likeCount: localLikeAmount + 1 },
+          }),
         });
       }
     }

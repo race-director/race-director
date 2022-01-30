@@ -31,7 +31,7 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
   const loadMore = async (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
     const db = getFirestore(firebaseApp);
     const postCollection = collection(db, "posts");
-    const orderPostsBy = orderBy("metadata.likeCount", "desc");
+    const orderPostsBy = orderBy("score", "desc");
     const queryLimit = limit(5);
     if (lastDoc) {
       paginateQuery(postCollection, [orderPostsBy, queryLimit], lastDoc).then(

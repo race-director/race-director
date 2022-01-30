@@ -2,6 +2,7 @@ import { doc, getFirestore, increment, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { post } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { ratePost } from "../../utils/other";
 
 interface SharePostProps {
   post: post;
@@ -23,6 +24,10 @@ const SharePost: React.FC<SharePostProps> = ({ post, href }) => {
           setLocalShareCount(localShareCount + 1);
           updateDoc(postRef, {
             "metadata.shareCount": increment(1),
+            score: ratePost({
+              ...post,
+              metadata: { ...post.metadata, shareCount: localShareCount + 1 },
+            }),
           });
         })
         .catch((err) => console.error(err));

@@ -14,7 +14,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Auth } from "../../pages/_app";
 import { comment, post } from "../../types";
 import { firebaseApp, paginateQuery } from "../../utils/firebase";
-import { generateAlphanumericStr } from "../../utils/other";
+import { generateAlphanumericStr, ratePost } from "../../utils/other";
 import { Comment } from "../Comments";
 
 interface CommentSectionProps {
@@ -82,6 +82,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
       // Update post's comment count
       await updateDoc(doc(db, `posts`, post.id), {
         "metadata.commentCount": increment(1),
+        score: ratePost({
+          ...post,
+          metadata: { ...post.metadata, commentCount: localCommentCount + 1 },
+        }),
       });
     }
   };
@@ -119,7 +123,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
         </h2>
         <div className="grid">
           {comments.map((c, idx) => (
-            <Comment comment={c} key={idx}></Comment>
+            <Comment comment={c} key={idx} post={post}></Comment>
           ))}
         </div>
         {comments.length === 0 && (
