@@ -11,6 +11,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { DiscordActivity } from "../components/Discord";
 import { Navigation } from "../components/Navigation";
 import { PostCard } from "../components/Post";
 import { post } from "../types";
@@ -151,12 +152,13 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                   );
               })}
           </div>
-          <div className="grid gap-4 lg:col-span-5 items-start justify-start">
-            <div>
+          <div className="lg:col-span-5 items-start justify-start">
+            <div className="w-full">
               <h1 className="text-3xl lg:text-4xl font-bold uppercase text-zinc-200 pb-2 lg:pb-2">
                 Activity
               </h1>
               <div className="grid gap-4 pt-4">
+                <DiscordActivity apiUrl="https://discord.com/api/guilds/937070357444190269/widget.json"></DiscordActivity>
                 <p className="text-xl text-center text-zinc-200/70">
                   This section is under construction
                 </p>
