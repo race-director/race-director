@@ -17,16 +17,18 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
   useEffect(() => {
     if (isShown) {
       // @ts-ignore
-      scrollRef.current?.onscroll = () => {
-        if (
-          // @ts-ignore
-          scrollRef.current?.scrollTop + scrollRef.current?.clientHeight >=
-          // @ts-ignore
-          scrollRef.current?.scrollHeight
-        ) {
-          setHasRead(true);
-        }
-      };
+      if (scrollRef.current && scrollRef.current.onscroll) {
+        scrollRef.current.onscroll = () => {
+          if (
+            // @ts-ignore
+            scrollRef.current?.scrollTop + scrollRef.current?.clientHeight >=
+            // @ts-ignore
+            scrollRef.current?.scrollHeight
+          ) {
+            setHasRead(true);
+          }
+        };
+      }
     }
   }, [isShown]);
 
