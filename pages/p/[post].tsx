@@ -1,16 +1,21 @@
 import { formatDistance, subDays } from "date-fns";
 import {
+  deleteDoc,
   doc,
   getDoc,
   getFirestore,
   increment,
   updateDoc,
 } from "firebase/firestore";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import { AnimatePresence } from "framer-motion";
 import Markdown from "markdown-to-jsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
+import { Backdrop, Modal } from "../../components/Menus";
 import { Navigation } from "../../components/Navigation";
 import { FALLBACK_PHOTO_URL } from "../../components/Navigation/Auth/Auth";
 import {
@@ -22,6 +27,7 @@ import {
 import CommentSection from "../../components/Post/CommentSection";
 import { post, user } from "../../types";
 import { firebaseApp } from "../../utils/firebase";
+import { Auth } from "../_app";
 
 interface PostPageProps {
   post: post | null;
@@ -37,6 +43,11 @@ const PostPage: React.FC<PostPageProps> = ({
   host,
 }) => {
   const db = getFirestore(firebaseApp);
+  const storage = getStorage(firebaseApp);
+  const [user] = useContext(Auth);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (post) {
@@ -45,6 +56,19 @@ const PostPage: React.FC<PostPageProps> = ({
       });
     }
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      deleteDoc(doc(db, `posts`, post?.id || ""));
+      deleteDoc(doc(db, `users/${user?.uid}/posts/${post?.id}`));
+      const fileRef = ref(storage, `posts/${post?.id}.md`);
+      deleteObject(fileRef);
+      router.push("/");
+    } catch (err) {
+      setConfirmDelete(false);
+      setError(err as Error);
+    }
+  };
 
   return (
     <>
@@ -119,8 +143,27 @@ const PostPage: React.FC<PostPageProps> = ({
                   </Link>
                 </div>
               )}
+
               {markdown && <Markdown>{markdown}</Markdown>}
               <hr />
+              {user && author?.uid === user?.uid && (
+                <>
+                  <div className="grid gap-4 not-prose">
+                    <h4 className="text-lg font-semibold">
+                      Only you can see these options
+                    </h4>
+                    <div>
+                      <button
+                        onClick={() => setConfirmDelete(true)}
+                        className="bg-red-600 px-4 disabled:opacity-70 disabled:hover-bg-red-600 disabled:cursor-not-allowed col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                      >
+                        Delete post
+                      </button>
+                    </div>
+                  </div>
+                  <hr />
+                </>
+              )}
               <CommentSection post={post}></CommentSection>
             </div>
           </div>
@@ -144,6 +187,64 @@ const PostPage: React.FC<PostPageProps> = ({
           <h1>We encountered an issue while loading this post</h1>
         </div>
       )}
+      <AnimatePresence>
+        {confirmDelete && (
+          <Backdrop onClick={() => setConfirmDelete(false)}>
+            <Modal>
+              <div className="p-8 grid gap-4">
+                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  Are you sure you want to delete this post?
+                </h1>
+                <p className="text-zinc-200/70">
+                  This is a permanent action and cannot be undone.
+                </p>
+                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                  <button
+                    onClick={handleDelete}
+                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                  >
+                    Okay
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(false)}
+                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </Backdrop>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {error && (
+          <Backdrop onClick={() => setError(null)}>
+            <Modal>
+              <div className="p-8 grid gap-4">
+                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  We&apos;ve encountered an issue
+                </h1>
+                <p className="text-zinc-200/70">{error.message}</p>
+                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                  <button
+                    onClick={() => setError(null)}
+                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                  >
+                    Okay
+                  </button>
+                  <button
+                    onClick={() => setError(null)}
+                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </Backdrop>
+        )}
+      </AnimatePresence>
     </>
   );
 };
