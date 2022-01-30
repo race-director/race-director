@@ -7,30 +7,11 @@ interface ChangeLogProps {}
 
 const ChangeLog: React.FC<ChangeLogProps> = () => {
   const [isShown, setIsShown] = useState(false);
-  const [hasRead, setHasRead] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsShown(!hasSeenChangelog());
   });
-
-  useEffect(() => {
-    if (isShown) {
-      // @ts-ignore
-      if (scrollRef.current && scrollRef.current.onscroll) {
-        scrollRef.current.onscroll = () => {
-          if (
-            // @ts-ignore
-            scrollRef.current?.scrollTop + scrollRef.current?.clientHeight >=
-            // @ts-ignore
-            scrollRef.current?.scrollHeight
-          ) {
-            setHasRead(true);
-          }
-        };
-      }
-    }
-  }, [isShown]);
 
   const hasSeenChangelog = () => {
     return localStorage.getItem("hasSeenChangelog") === "true";
@@ -136,7 +117,6 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
               </div>
               <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200">
                 <button
-                  disabled={!hasRead}
                   onClick={closeChangelog}
                   className="bg-red-600 disabled:opacity-60 disabled:hover:bg-red-600 disabled:cursor-not-allowed text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
                 >
