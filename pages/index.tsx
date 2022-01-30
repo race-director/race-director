@@ -73,7 +73,7 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                         alt={posts[0].coverImage.coverImageCaption}
                         src={posts[0].coverImage.coverImageUrl}
                         layout="fill"
-                        className="object-cover"
+                        className="object-contain"
                       ></Image>
                     </div>
                     <div className="absolute grid items-end lg:px-6 px-4 py-4 lg:py-12 bottom-0 w-full bg-gradient-to-b from-transparent to-black/80 via-black/50 lg:via-transparent top-0 transition-all hover:opacity-80">
