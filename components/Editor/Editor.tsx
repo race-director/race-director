@@ -2,6 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { Auth } from "../../pages/_app";
+import { sendWebhook } from "../../utils/discord";
 import { submitPost } from "../../utils/firebase";
 import { Backdrop, Modal } from "../Menus";
 import { CoverImage, Headline, Paragraph, Quote, Subheading } from "./Blocks";
@@ -50,7 +51,17 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await submitPost(editorState, user);
+      const postId = await submitPost(editorState, user);
+
+      await sendWebhook(
+        "https://discord.com/api/webhooks/937729423015313518/E2IFzQzWgFXiZRBMmmT9cCVGgBynoOfWBZAPWJvcBvrbcv-h7-hoh1p_SctIzg8qi83L",
+        editorState,
+        postId,
+        user
+      ).catch((e) => {
+        console.error(e);
+      });
+
       router.push("/studio");
     } catch (error) {
       setLoading(false);

@@ -69,7 +69,10 @@ const submitPost = async (editorState: editorContent, user: user) => {
     // Store editable post
     const editorStateDoc = doc(db, `users/${user?.uid}/posts`, postId);
     await setDoc(editorStateDoc, editorState);
+
+    return postId;
   }
+  return "";
 };
 
 export default submitPost;
