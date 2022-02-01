@@ -3,6 +3,7 @@ import { post, user } from "../../types";
 
 const sendWebhook = async (
   endpoint: string,
+  message: string,
   post: editorContent,
   postId: string,
   user: user

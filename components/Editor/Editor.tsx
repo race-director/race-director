@@ -53,8 +53,21 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
     try {
       const postId = await submitPost(editorState, user);
 
+      // Race director server
       await sendWebhook(
         "https://discord.com/api/webhooks/937729423015313518/E2IFzQzWgFXiZRBMmmT9cCVGgBynoOfWBZAPWJvcBvrbcv-h7-hoh1p_SctIzg8qi83L",
+        "Look at this article that has just been posted!",
+        editorState,
+        postId,
+        user
+      ).catch((e) => {
+        console.error(e);
+      });
+
+      // Drivetribe's Community Server
+      await sendWebhook(
+        "https://discordapp.com/api/webhooks/937883826326224936/ypBeF_UMzMo7J-Ps5nXdYtBqJTReZU5uop0051W_g1iCY7uatyep9Rmt_Vij7PcQUgUl",
+        "",
         editorState,
         postId,
         user
