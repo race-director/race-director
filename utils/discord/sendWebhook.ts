@@ -9,7 +9,7 @@ const sendWebhook = async (
   user: user
 ) => {
   const webhook = {
-    content: "Look at this article that has just been posted!",
+    content: message,
     embeds: [
       {
         title: post.headline,
