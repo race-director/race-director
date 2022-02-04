@@ -112,10 +112,10 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
       {!isDeleted ? (
         <>
           {!authorLoading && (
-            <div className="border grid gap-2 border-x-0 border-t-0 border-zinc-600/60 py-4">
+            <div className="grid gap-2 border border-x-0 border-t-0 border-zinc-600/60 py-4">
               <div className="flex w-full justify-between">
                 <Link href={`/u/${authorDoc?.uid || ""}`}>
-                  <a className="flex space-x-3 items-center font-semibold">
+                  <a className="flex items-center space-x-3 font-semibold">
                     <Image
                       alt={authorDoc?.displayName || ""}
                       src={authorDoc?.photoURL || ""}
@@ -126,14 +126,14 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
                     <p className="text-sm">{authorDoc?.displayName}</p>
                   </a>
                 </Link>
-                <div className="flex space-x-4 items-center justify-center">
+                <div className="flex items-center justify-center space-x-4">
                   {comment.userId === loggedInUser?.uid && (
                     <button
                       className="relative"
                       onClick={() => setMoreOptionsOpen(!moreOptionsOpen)}
                     >
                       <svg
-                        className="fill-current text-zinc-200/80 h-5 w-5"
+                        className="h-5 w-5 fill-current text-zinc-200/80"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24px"
                         viewBox="0 0 24 24"
@@ -149,12 +149,12 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "4rem" }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="absolute right-0 top-8 bg-zinc-800 rounded-md w-44 grid items-center justify-center"
+                            className="absolute right-0 top-8 grid w-44 items-center justify-center rounded-md bg-zinc-800"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <div
                               onClick={handleDeleteComment}
-                              className="hover:bg-zinc-700 w-44 py-4 rounded-md transition-colors font-semibold uppercase"
+                              className="w-44 rounded-md py-4 font-semibold uppercase transition-colors hover:bg-zinc-700"
                             >
                               Delete comment
                             </div>
@@ -164,12 +164,12 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
                     </button>
                   )}
                   <button
-                    className="flex space-x-1 items-center"
+                    className="flex items-center space-x-1"
                     onClick={handleLike}
                   >
                     {isLiked ? (
                       <svg
-                        className="fill-current text-red-600 h-5 w-5"
+                        className="h-5 w-5 fill-current text-red-600"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24px"
                         viewBox="0 0 24 24"
@@ -181,7 +181,7 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
                       </svg>
                     ) : (
                       <svg
-                        className="fill-current text-red-600 h-5 w-5"
+                        className="h-5 w-5 fill-current text-red-600"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24px"
                         viewBox="0 0 24 24"
@@ -199,7 +199,7 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
               <div>
                 <p className="text-sm">
                   <Anchorme
-                    className="underline text-blue-400 hover:text-blue-300 transition-colors"
+                    className="text-blue-400 underline transition-colors hover:text-blue-300"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -208,7 +208,7 @@ const Comment: React.FC<CommentProps> = ({ comment, post }) => {
                 </p>
               </div>
               <div>
-                <p className="text-xs text-zinc-200/70 uppercase pt-2">
+                <p className="pt-2 text-xs uppercase text-zinc-200/70">
                   {formatDistance(
                     subDays(new Date(comment.createdAt), 0),
                     new Date(),

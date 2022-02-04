@@ -23,7 +23,7 @@ const Headline: React.FC<HeadlineProps> = ({ editorState, createBlockFx }) => {
 
   return (
     <textarea
-      className="text-4xl font-bold bg-transparent border border-zinc-100 text-zinc-100 pt-5 pb-2 px-4 h-20 rounded-md focus:ring ring-blue-200"
+      className="h-20 rounded-md border border-zinc-100 bg-transparent px-4 pt-5 pb-2 text-4xl font-bold text-zinc-100 ring-blue-200 focus:ring"
       placeholder="ADD A HEADLINE"
       onChange={handleChange}
       value={state.headline}

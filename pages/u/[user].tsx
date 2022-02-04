@@ -86,21 +86,21 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
         {isEditOpen && (
           <Backdrop onClick={() => setIsEditOpen(false)}>
             <Modal>
-              <div className="p-8 grid gap-4">
-                <h1 className="text-2xl text-zinc-200/90 font-bold uppercase">
+              <div className="grid gap-4 p-8">
+                <h1 className="text-2xl font-bold uppercase text-zinc-200/90">
                   This feature is not implemented yet!
                 </h1>
                 <p className="text-zinc-200/70">It will be, just not yet</p>
-                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200 sm:grid-cols-2">
                   <button
                     onClick={() => setIsEditOpen(false)}
-                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                    className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                   >
                     Okay
                   </button>
                   <button
                     onClick={() => setIsEditOpen(false)}
-                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                    className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                   >
                     Cancel
                   </button>
@@ -110,10 +110,10 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
           </Backdrop>
         )}
       </AnimatePresence>
-      <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
+      <div className="flex min-h-screen w-full flex-col items-center pb-12 dark:bg-zinc-900">
         <Navigation></Navigation>
-        <div className="px-4 max-w-4xl w-screen dark:prose-invert font-sans py-8 md:py-12">
-          <div className="grid md:grid-cols-4 grid-cols-1 gap-6 md:gap-8">
+        <div className="w-screen max-w-4xl px-4 py-8 font-sans dark:prose-invert md:py-12">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-8">
             <div className="grid items-center justify-center">
               <Image
                 className="rounded-full object-cover"
@@ -123,7 +123,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
                 alt="User Profile"
               ></Image>
             </div>
-            <div className="col-span-2 flex flex-col space-y-2 justify-center">
+            <div className="col-span-2 flex flex-col justify-center space-y-2">
               <h1 className="text-3xl font-semibold text-zinc-200">
                 {userData?.displayName}
               </h1>
@@ -133,16 +133,16 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
                     !userData?.bio &&
                     "Your bio goes here. Only you can see this message.")}
               </p>
-              <div className="pt-2 flex space-x-2">
+              <div className="flex space-x-2 pt-2">
                 <button
                   onClick={() => setIsEditOpen(true)}
-                  className="bg-red-600 disabled:cursor-not-allowed px-6 py-1 font-bold transition-all transform active:scale-95 hover:bg-red-700 uppercase text-zinc-200 rounded-md"
+                  className="transform rounded-md bg-red-600 px-6 py-1 font-bold uppercase text-zinc-200 transition-all hover:bg-red-700 active:scale-95 disabled:cursor-not-allowed"
                 >
                   {isOwnProfile ? "Edit Profile" : "Follow"}
                 </button>
               </div>
             </div>
-            <div className="flex md:flex-col md:space-y-4 space-y-0 md:space-x-0 space-x-4 md:justify-center md:px-8 md:border-l md:border-t-0 border-t py-4 border-zinc-200">
+            <div className="flex space-y-0 space-x-4 border-t border-zinc-200 py-4 md:flex-col md:justify-center md:space-y-4 md:space-x-0 md:border-l md:border-t-0 md:px-8">
               <div>
                 <p className="text-sm uppercase text-zinc-200/80">Following</p>
                 <p className="text-lg font-bold text-zinc-200">
@@ -157,8 +157,8 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
               </div>
             </div>
           </div>
-          <div className="md:pt-24 pt-6 grid md:gap-8">
-            <h1 className="text-2xl lg:text-3xl font-bold uppercase text-zinc-200/80 pb-2 lg:pb-2">
+          <div className="grid pt-6 md:gap-8 md:pt-24">
+            <h1 className="pb-2 text-2xl font-bold uppercase text-zinc-200/80 lg:pb-2 lg:text-3xl">
               {userData?.displayName}&apos;s posts
             </h1>
             <div className="grid gap-4">

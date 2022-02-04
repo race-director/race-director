@@ -6,11 +6,11 @@ interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = ({ children }) => {
   return (
-    <div className="w-full flex flex-col items-center sticky top-0 z-20">
-      <div className="dark:bg-zinc-900 bg-white max-w-screen-2xl w-full flex justify-between items-center dark:border-b-zinc-100/40 border-b-zinc-600/40 border border-0.5 border-t-0 border-x-0 py-4 px-4">
+    <div className="sticky top-0 z-20 flex w-full flex-col items-center">
+      <div className="border-0.5 flex w-full max-w-screen-2xl items-center justify-between border border-x-0 border-t-0 border-b-zinc-600/40 bg-white py-4 px-4 dark:border-b-zinc-100/40 dark:bg-zinc-900">
         <div>
           <Link href="/">
-            <a className="text-base md:text-2xl font-bold tracking-tighter text-zinc-900/80 dark:text-zinc-100 border-2 dark:border-zinc-50 border-zinc-900/80 px-2 py-1 rounded-sm">
+            <a className="rounded-sm border-2 border-zinc-900/80 px-2 py-1 text-base font-bold tracking-tighter text-zinc-900/80 dark:border-zinc-50 dark:text-zinc-100 md:text-2xl">
               Race Director
             </a>
           </Link>

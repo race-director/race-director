@@ -42,19 +42,19 @@ const CoverImage: React.FC<CoverImageProps> = ({
       {!editorState.coverImage.coverImageUrl ? (
         <>
           {fileLoading ? (
-            <div className="w-full aspect-video border border-zinc-200 rounded-md grid items-center justify-center">
-              <p className="text-xl text-zinc-200/80 font-bold">
+            <div className="grid aspect-video w-full items-center justify-center rounded-md border border-zinc-200">
+              <p className="text-xl font-bold text-zinc-200/80">
                 Your file is being uploaded
               </p>
             </div>
           ) : (
             <div
               {...getRootProps()}
-              className="w-full aspect-video border border-zinc-200 rounded-md grid items-center justify-center"
+              className="grid aspect-video w-full items-center justify-center rounded-md border border-zinc-200"
             >
               <input {...getInputProps()} />
               {isDragActive ? (
-                <p className="text-xl text-zinc-200/80 font-bold">
+                <p className="text-xl font-bold text-zinc-200/80">
                   Drop Some files Here
                 </p>
               ) : (
@@ -69,13 +69,13 @@ const CoverImage: React.FC<CoverImageProps> = ({
         </>
       ) : (
         <img
-          className="rounded-md object-contain border border-zinc-200 aspect-video w-full bg-black"
+          className="aspect-video w-full rounded-md border border-zinc-200 bg-black object-contain"
           src={editorState.coverImage.coverImageUrl}
         ></img>
       )}
       <input
         placeholder="Add a caption"
-        className="bg-transparent w-full border border-zinc-200 text-zinc-200 border-x-0 border-t-0 py-3 pb-2 px-4 h-8 font-light"
+        className="h-8 w-full border border-x-0 border-t-0 border-zinc-200 bg-transparent py-3 px-4 pb-2 font-light text-zinc-200"
         onChange={(e) => {
           setEditorState({
             ...editorState,

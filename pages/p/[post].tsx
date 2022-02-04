@@ -83,23 +83,23 @@ const PostPage: React.FC<PostPageProps> = ({
       {post ? (
         <div>
           <HeadMetadata href={`${host}p/${post.id}`} post={post}></HeadMetadata>
-          <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
+          <div className="flex min-h-screen w-full flex-col items-center pb-12 dark:bg-zinc-900">
             <Navigation></Navigation>
-            <div className="relative w-full max-w-4xl z-0 aspect-video bg-black">
+            <div className="relative z-0 aspect-video w-full max-w-4xl bg-black">
               <Image
                 layout="fill"
                 objectFit="contain"
                 src={post.coverImage.coverImageUrl}
                 alt={post.coverImage.coverImageCaption}
               ></Image>
-              <figcaption className="absolute top-full right-0 -translate-y-10 bg-zinc-200/80 dark:bg-black/60 px-4 py-2 rounded-tl-md dark:text-zinc-200 text-zinc-900 italic">
+              <figcaption className="absolute top-full right-0 -translate-y-10 rounded-tl-md bg-zinc-200/80 px-4 py-2 italic text-zinc-900 dark:bg-black/60 dark:text-zinc-200">
                 - {post.coverImage.coverImageCaption}
               </figcaption>
             </div>
-            <div className="px-4 prose prose-sm md:prose-base prose-zinc max-w-3xl w-screen dark:prose-invert font-sans md:prose-h1:text-5xl prose-h1:text-4xl prose-h2:text-2xl md:prose-h2:text-3xl py-8 md:py-12">
+            <div className="prose prose-sm prose-zinc w-screen max-w-3xl px-4 py-8 font-sans prose-h1:text-4xl prose-h2:text-2xl dark:prose-invert md:prose-base md:py-12 md:prose-h1:text-5xl md:prose-h2:text-3xl">
               <div>
                 <h1>{post.metadata.headline}</h1>
-                <p className="italic font-semibold text-lg">
+                <p className="text-lg font-semibold italic">
                   {post.metadata.summary}
                 </p>
               </div>
@@ -107,7 +107,7 @@ const PostPage: React.FC<PostPageProps> = ({
                 <div className="not-prose flex">
                   <Link href={`/u/${author.uid}`}>
                     <a>
-                      <div className="flex space-x-4 not-prose items-center">
+                      <div className="not-prose flex items-center space-x-4">
                         <Image
                           alt="Author Profile"
                           className="rounded-full object-cover"
@@ -117,7 +117,7 @@ const PostPage: React.FC<PostPageProps> = ({
                         ></Image>
                         <div>
                           <p className="font-bold">{author.displayName}</p>
-                          <div className="text-base flex space-x-2 items-center">
+                          <div className="flex items-center space-x-2 text-base">
                             <p>
                               {formatDistance(
                                 subDays(new Date(post.metadata.createdAt), 0),
@@ -127,12 +127,12 @@ const PostPage: React.FC<PostPageProps> = ({
                                 }
                               )}
                             </p>
-                            <div className="flex space-x-2 items-center">
+                            <div className="flex items-center space-x-2">
                               <span>·</span>
                               <div className="flex items-center space-x-1">
                                 <p>{post.metadata.viewCount}</p>{" "}
                                 <svg
-                                  className="fill-current text-zinc-200 h-4 w-4"
+                                  className="h-4 w-4 fill-current text-zinc-200"
                                   xmlns="http://www.w3.org/2000/svg"
                                   height="24px"
                                   viewBox="0 0 24 24"
@@ -156,14 +156,14 @@ const PostPage: React.FC<PostPageProps> = ({
               <hr />
               {user && author?.uid === user?.uid && (
                 <>
-                  <div className="grid gap-4 not-prose">
+                  <div className="not-prose grid gap-4">
                     <h4 className="text-lg font-semibold">
                       Only you can see these options
                     </h4>
                     <div>
                       <button
                         onClick={() => setConfirmDelete(true)}
-                        className="bg-red-600 px-4 disabled:opacity-70 disabled:hover-bg-red-600 disabled:cursor-not-allowed col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                        className="disabled:hover-bg-red-600 col-span-3 transform rounded-md bg-red-600 px-4 py-2 text-center font-bold uppercase text-zinc-200 transition-all hover:bg-red-700 active:scale-90 disabled:cursor-not-allowed disabled:opacity-70"
                       >
                         Delete post
                       </button>
@@ -176,8 +176,8 @@ const PostPage: React.FC<PostPageProps> = ({
             </div>
           </div>
           {/* Bottom bar */}
-          <div className="fixed bottom-2 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900">
-            <div className="max-w-3xl w-screen grid grid-cols-3 justify-between px-4 gap-2">
+          <div className="fixed bottom-2 right-0 left-0 z-20 grid items-center justify-center bg-zinc-900">
+            <div className="grid w-screen max-w-3xl grid-cols-3 justify-between gap-2 px-4">
               <LikePostButton post={post}></LikePostButton>
               <CommentPostButton
                 href="#comments"
@@ -199,23 +199,23 @@ const PostPage: React.FC<PostPageProps> = ({
         {confirmDelete && (
           <Backdrop onClick={() => setConfirmDelete(false)}>
             <Modal>
-              <div className="p-8 grid gap-4">
-                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+              <div className="grid gap-4 p-8">
+                <h1 className="text-xl font-bold uppercase text-zinc-200/90">
                   Are you sure you want to delete this post?
                 </h1>
                 <p className="text-zinc-200/70">
                   This is a permanent action and cannot be undone.
                 </p>
-                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200 sm:grid-cols-2">
                   <button
                     onClick={handleDelete}
-                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                    className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                   >
                     Okay
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
-                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                    className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                   >
                     Cancel
                   </button>
@@ -229,21 +229,21 @@ const PostPage: React.FC<PostPageProps> = ({
         {error && (
           <Backdrop onClick={() => setError(null)}>
             <Modal>
-              <div className="p-8 grid gap-4">
-                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+              <div className="grid gap-4 p-8">
+                <h1 className="text-xl font-bold uppercase text-zinc-200/90">
                   We&apos;ve encountered an issue
                 </h1>
                 <p className="text-zinc-200/70">{error.message}</p>
-                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200 sm:grid-cols-2">
                   <button
                     onClick={() => setError(null)}
-                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                    className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                   >
                     Okay
                   </button>
                   <button
                     onClick={() => setError(null)}
-                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                    className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                   >
                     Cancel
                   </button>

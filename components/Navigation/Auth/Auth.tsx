@@ -31,21 +31,21 @@ const Auth: React.FC<AuthProps> = () => {
         {!darkMode && (
           <Backdrop onClick={() => toggleDarkMode()}>
             <Modal>
-              <div className="p-8 grid gap-4">
-                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+              <div className="grid gap-4 p-8">
+                <h1 className="text-xl font-bold uppercase text-zinc-200/90">
                   Light mode is still not available.
                 </h1>
                 <p className="text-zinc-200/70">It will be, just not yet</p>
-                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200 sm:grid-cols-2">
                   <button
                     onClick={() => toggleDarkMode()}
-                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                    className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                   >
                     Okay
                   </button>
                   <button
                     onClick={() => toggleDarkMode()}
-                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                    className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                   >
                     Cancel
                   </button>
@@ -60,9 +60,9 @@ const Auth: React.FC<AuthProps> = () => {
           <div className="relative">
             <div
               onClick={() => setExpandedMenuState(!expandedMenuState)}
-              className="flex space-x-0 items-center justify-center cursor-pointer"
+              className="flex cursor-pointer items-center justify-center space-x-0"
             >
-              <div className="rounded-full h-8 w-8 border-2 dark:border-zinc-200/80 border-zinc-700/80 overflow-hidden">
+              <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-zinc-700/80 dark:border-zinc-200/80">
                 <Image height={32} width={32} src={photoUrl} alt="Profile" />
               </div>
               <svg
@@ -71,7 +71,7 @@ const Auth: React.FC<AuthProps> = () => {
                 viewBox="0 0 24 24"
                 width="24px"
                 fill="#000000"
-                className={`fill-blue-400 h-5 w-5 transform transition-transform ${
+                className={`h-5 w-5 transform fill-blue-400 transition-transform ${
                   expandedMenuState ? "rotate-180" : ""
                 }`}
               >
@@ -85,14 +85,14 @@ const Auth: React.FC<AuthProps> = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="absolute w-72 dark:bg-zinc-800 bg-zinc-100 rounded-lg shadow-lg top-full right-0 mt-4 overflow-hidden"
+                  className="absolute top-full right-0 mt-4 w-72 overflow-hidden rounded-lg bg-zinc-100 shadow-lg dark:bg-zinc-800"
                 >
                   <div className="px-4 py-6">
                     {user ? (
                       <div className="grid gap-4">
                         <Link href={`/u/${user.uid}`}>
-                          <a className="flex items-center space-x-3 cursor-pointer dark:hover:bg-zinc-700 hover:bg-zinc-200 px-4 py-2 rounded-md transition-colors">
-                            <div className="rounded-full border-2 dark:border-zinc-200/80 border-zinc-700/80 h-12 w-12 overflow-hidden">
+                          <a className="flex cursor-pointer items-center space-x-3 rounded-md px-4 py-2 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                            <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-zinc-700/80 dark:border-zinc-200/80">
                               <Image
                                 height={48}
                                 width={48}
@@ -100,7 +100,7 @@ const Auth: React.FC<AuthProps> = () => {
                                 alt="Profile"
                               />
                             </div>
-                            <p className="uppercase tracking-tighter dark:text-zinc-100/90 text-zinc-800/80 font-semibold">
+                            <p className="font-semibold uppercase tracking-tighter text-zinc-800/80 dark:text-zinc-100/90">
                               {user.displayName}
                             </p>
                           </a>
@@ -109,7 +109,7 @@ const Auth: React.FC<AuthProps> = () => {
                           <ul className="text-zinc-700/80 dark:text-zinc-200/80">
                             <li
                               onClick={toggleDarkMode}
-                              className="flex relative px-12 py-1 dark:hover:bg-zinc-700 hover:bg-zinc-200 transition-colors font-semibold overflow-hidden rounded-md cursor-pointer"
+                              className="relative flex cursor-pointer overflow-hidden rounded-md px-12 py-1 font-semibold transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +118,7 @@ const Auth: React.FC<AuthProps> = () => {
                                 viewBox="0 0 24 24"
                                 width="24px"
                                 fill="#000000"
-                                className={`fill-zinc-900/80 absolute transition-all ${
+                                className={`absolute fill-zinc-900/80 transition-all ${
                                   darkMode
                                     ? "-left-10 opacity-0"
                                     : "left-4 opacity-100"
@@ -135,7 +135,7 @@ const Auth: React.FC<AuthProps> = () => {
                                 viewBox="0 0 24 24"
                                 width="24px"
                                 fill="#000000"
-                                className={`fill-yellow-300/80 absolute transition-all ${
+                                className={`absolute fill-yellow-300/80 transition-all ${
                                   darkMode
                                     ? "left-4 opacity-100"
                                     : "-left-10 opacity-0"
@@ -148,7 +148,7 @@ const Auth: React.FC<AuthProps> = () => {
                                 {darkMode ? "Light Mode" : "Dark Mode"}
                               </span>
                             </li>
-                            <li className="flex relative px-12 py-1 dark:hover:bg-zinc-700 hover:bg-zinc-200 transition-colors font-semibold overflow-hidden rounded-md cursor-pointer">
+                            <li className="relative flex cursor-pointer overflow-hidden rounded-md px-12 py-1 font-semibold transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700">
                               <Link href={"/studio"}>
                                 <a className="w-full">
                                   <svg
@@ -169,31 +169,31 @@ const Auth: React.FC<AuthProps> = () => {
                           </ul>
                         </div>
 
-                        <div className="grid text-zinc-200 px-4 pt-2">
+                        <div className="grid px-4 pt-2 text-zinc-200">
                           <button
                             onClick={() => signOut(getAuth(firebaseApp))}
-                            className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                            className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                           >
                             Logout
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="text-zinc-200 grid grid-cols-1 gap-4">
-                        <p className="text-sm italic text-zinc-200/70 text-center">
+                      <div className="grid grid-cols-1 gap-4 text-zinc-200">
+                        <p className="text-center text-sm italic text-zinc-200/70">
                           Sign in to Race Director to customise your feed and
                           enjoy a better experience
                         </p>
                         <div className="grid grid-cols-1 gap-1.5">
                           <button
                             onClick={() => setSignInState("signup")}
-                            className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                            className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                           >
                             Sign Up
                           </button>
                           <button
                             onClick={() => setSignInState("login")}
-                            className="bg-zinc-600 hover:bg-zinc-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                            className="transform rounded-md bg-zinc-600 py-2 font-bold uppercase transition-all hover:bg-zinc-700 active:scale-90"
                           >
                             Login
                           </button>
@@ -211,7 +211,7 @@ const Auth: React.FC<AuthProps> = () => {
         </>
       ) : (
         <>
-          <div className="rounded-full h-8 w-8 overflow-hidden"></div>
+          <div className="h-8 w-8 overflow-hidden rounded-full"></div>
         </>
       )}
     </>

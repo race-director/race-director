@@ -12,8 +12,8 @@ interface PostEditorProps {
 
 const PostEditor: React.FC<PostEditorProps> = ({ initialEditorContent }) => {
   return (
-    <div className="dark:bg-zinc-900 min-h-screen w-full grid justify-center">
-      <div className="pt-12 px-4 max-w-5xl w-screen">
+    <div className="grid min-h-screen w-full justify-center dark:bg-zinc-900">
+      <div className="w-screen max-w-5xl px-4 pt-12">
         <Editor initialEditorContent={initialEditorContent}></Editor>
       </div>
     </div>

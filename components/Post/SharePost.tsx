@@ -37,11 +37,11 @@ const SharePost: React.FC<SharePostProps> = ({ post, href }) => {
   return (
     <button
       onClick={handleShare}
-      className="flex items-center justify-center space-x-2 px-4 py-2 border-zinc-200/70 rounded-md bg-zinc-900 hover:bg-zinc-800 transform transition-all active:scale-95 border-2 text-lg md:text-2xl font-semibold text-zinc-200/90"
+      className="flex transform items-center justify-center space-x-2 rounded-md border-2 border-zinc-200/70 bg-zinc-900 px-4 py-2 text-lg font-semibold text-zinc-200/90 transition-all hover:bg-zinc-800 active:scale-95 md:text-2xl"
     >
       <div>
         <svg
-          className="fill-current text-blue-500/80 h-5 w-5 md:h-6 md:w-6"
+          className="h-5 w-5 fill-current text-blue-500/80 md:h-6 md:w-6"
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
           viewBox="0 0 24 24"

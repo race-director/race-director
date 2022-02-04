@@ -60,16 +60,16 @@ const StudioPage: React.FC<StudioPageProps> = () => {
   };
 
   return (
-    <div className="dark:bg-zinc-900 min-h-screen w-full flex items-center flex-col relative">
+    <div className="relative flex min-h-screen w-full flex-col items-center dark:bg-zinc-900">
       <Head>
         <title>Race Director - Studio</title>
       </Head>
       <Navigation></Navigation>
       {user ? (
         <>
-          <div className="max-w-screen-2xl w-screen grid">
+          <div className="grid w-screen max-w-screen-2xl">
             <div className="grid gap-6 px-4 py-8 md:py-12">
-              <h1 className="text-4xl text-zinc-200 font-bold">Your posts</h1>
+              <h1 className="text-4xl font-bold text-zinc-200">Your posts</h1>
               <div className="grid gap-4">
                 {posts?.length ? (
                   posts.map((p) => {
@@ -77,14 +77,14 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                     return (
                       <Link key={id} href={`p/${id}`}>
                         <a>
-                          <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden">
-                            <div className="lg:h-44 aspect-video bg-black">
+                          <div className="flex flex-col space-x-4 overflow-hidden rounded-md border border-zinc-200 lg:flex-row">
+                            <div className="aspect-video bg-black lg:h-44">
                               <img
-                                className="object-contain h-full w-full"
+                                className="h-full w-full object-contain"
                                 src={coverImage.coverImageUrl}
                               ></img>
                             </div>
-                            <div className="text-zinc-200 py-4">
+                            <div className="py-4 text-zinc-200">
                               <h1 className="text-2xl font-bold tracking-tighter">
                                 {metadata.headline}
                               </h1>
@@ -96,8 +96,8 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                     );
                   })
                 ) : (
-                  <div className="flex flex-col lg:flex-row space-x-4 border border-zinc-200 rounded-md overflow-hidden px-4">
-                    <div className="text-zinc-200 py-4">
+                  <div className="flex flex-col space-x-4 overflow-hidden rounded-md border border-zinc-200 px-4 lg:flex-row">
+                    <div className="py-4 text-zinc-200">
                       <h1 className="text-2xl font-bold tracking-tighter">
                         You have not written any posts yet
                       </h1>
@@ -110,7 +110,7 @@ const StudioPage: React.FC<StudioPageProps> = () => {
                 )}
                 <button
                   onClick={() => loadMore(lastDoc)}
-                  className="text-lg text-zinc-200/80 py-2 px-4 border-zinc-200/70 border-2 rounded-md font-semibold transform active:scale-95 transition-all"
+                  className="transform rounded-md border-2 border-zinc-200/70 py-2 px-4 text-lg font-semibold text-zinc-200/80 transition-all active:scale-95"
                 >
                   Load more
                 </button>
@@ -120,21 +120,21 @@ const StudioPage: React.FC<StudioPageProps> = () => {
         </>
       ) : (
         <div className="pt-8">
-          <p className="text-xl uppercase font-bold text-zinc-200/90">
+          <p className="text-xl font-bold uppercase text-zinc-200/90">
             Log in to use the studio
           </p>
         </div>
       )}
       {user && (
         <Link href="/studio/new">
-          <a className="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-red-600 h-16 w-16 rounded-full grid items-center justify-center">
+          <a className="fixed bottom-4 right-4 grid h-16 w-16 items-center justify-center rounded-full bg-red-600 md:bottom-8 md:right-8">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
               viewBox="0 0 24 24"
               width="24px"
               fill="#000000"
-              className="fill-zinc-50 h-10 w-10"
+              className="h-10 w-10 fill-zinc-50"
             >
               <path d="M0 0h24v24H0V0z" fill="none" />
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />

@@ -90,28 +90,28 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
   };
 
   return (
-    <div className="grid gap-4 grid-cols-1 pb-40">
+    <div className="grid grid-cols-1 gap-4 pb-40">
       <AnimatePresence>
         {error && (
           <Backdrop onClick={() => setError(null)}>
             <Modal>
-              <div className="p-8 grid gap-4">
-                <h1 className="text-xl text-zinc-200/90 font-bold uppercase">
+              <div className="grid gap-4 p-8">
+                <h1 className="text-xl font-bold uppercase text-zinc-200/90">
                   We seem to have encountered an issue
                 </h1>
                 <p className="text-zinc-200/70">
                   Error message: {error.message}
                 </p>
-                <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-2 text-zinc-200">
+                <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200 sm:grid-cols-2">
                   <button
                     onClick={() => setError(null)}
-                    className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                    className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                   >
                     Okay
                   </button>
                   <button
                     onClick={() => setError(null)}
-                    className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                    className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                   >
                     Cancel
                   </button>
@@ -128,7 +128,7 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
       ></Headline>
       <textarea
         placeholder="Write a summary for your post"
-        className="bg-transparent border border-zinc-200 text-zinc-200 pt-3 pb-2 px-4 h-16 font-semibold rounded-md focus:ring ring-blue-200"
+        className="h-16 rounded-md border border-zinc-200 bg-transparent px-4 pt-3 pb-2 font-semibold text-zinc-200 ring-blue-200 focus:ring"
         onChange={(e) =>
           setEditorState({ ...editorState, summary: e.target.value })
         }
@@ -164,29 +164,29 @@ const Editor: React.FC<EditorProps> = ({ initialEditorContent }) => {
             );
         }
       })}
-      <div className="fixed bottom-0 right-0 left-0 grid items-center justify-center z-20 bg-zinc-900 pb-4">
-        <div className="max-w-5xl w-screen grid grid-cols-3 justify-between px-4 gap-x-2 gap-y-4">
+      <div className="fixed bottom-0 right-0 left-0 z-20 grid items-center justify-center bg-zinc-900 pb-4">
+        <div className="grid w-screen max-w-5xl grid-cols-3 justify-between gap-x-2 gap-y-4 px-4">
           <button
-            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            className="rounded-md border-2 border-zinc-200/90 py-2 font-semibold uppercase text-zinc-200 transition-colors hover:bg-zinc-800"
             onClick={() => createBlock("paragraph")}
           >
             Paragraph
           </button>
           <button
-            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            className="rounded-md border-2 border-zinc-200/90 py-2 font-semibold uppercase text-zinc-200 transition-colors hover:bg-zinc-800"
             onClick={() => createBlock("subheading")}
           >
             Subheading
           </button>
           <button
-            className="border-2 transition-colors hover:bg-zinc-800 border-zinc-200/90 py-2 rounded-md font-semibold uppercase text-zinc-200"
+            className="rounded-md border-2 border-zinc-200/90 py-2 font-semibold uppercase text-zinc-200 transition-colors hover:bg-zinc-800"
             onClick={() => createBlock("quote")}
           >
             Quote
           </button>
           <button
             disabled={loading}
-            className="bg-red-600 disabled:opacity-70 disabled:hover-bg-red-600 disabled:cursor-not-allowed col-span-3 text-zinc-200 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+            className="disabled:hover-bg-red-600 col-span-3 transform rounded-md bg-red-600 py-2 text-center font-bold uppercase text-zinc-200 transition-all hover:bg-red-700 active:scale-90 disabled:cursor-not-allowed disabled:opacity-70"
             onClick={handleSubmit}
           >
             Publish

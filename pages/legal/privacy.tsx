@@ -5,9 +5,9 @@ interface PrivacyPolicyProps {}
 
 const PrivacyPolicy: React.FC<PrivacyPolicyProps> = () => {
   return (
-    <div className="w-full flex flex-col items-center dark:bg-zinc-900 min-h-screen pb-12">
+    <div className="flex min-h-screen w-full flex-col items-center pb-12 dark:bg-zinc-900">
       <Navigation></Navigation>
-      <div className="px-4 prose prose-sm md:prose-base prose-zinc max-w-3xl w-screen dark:prose-invert font-sans md:prose-h1:text-5xl prose-h1:text-4xl prose-h2:text-2xl md:prose-h2:text-3xl py-8 md:py-12">
+      <div className="prose prose-sm prose-zinc w-screen max-w-3xl px-4 py-8 font-sans prose-h1:text-4xl prose-h2:text-2xl dark:prose-invert md:prose-base md:py-12 md:prose-h1:text-5xl md:prose-h2:text-3xl">
         <div>
           <h1>Privacy Policy</h1>
           <p>Last updated: January 26, 2022</p>

@@ -17,8 +17,8 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
   }, []);
 
   return (
-    <div className="rounded-md overflow-hidden">
-      <div className="bg-[#5865F2] px-6 py-4 flex items-center justify-between">
+    <div className="overflow-hidden rounded-md">
+      <div className="flex items-center justify-between bg-[#5865F2] px-6 py-4">
         <div className="flex items-center justify-center space-x-4">
           <img
             className="w-10 pt-1"
@@ -35,7 +35,7 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
         </p>
       </div>
       <div className="bg-zinc-800 px-6 py-4">
-        <div className="h-32 bg-zinc-800 rounded-lg flex space-x-4">
+        <div className="flex h-32 space-x-4 rounded-lg bg-zinc-800">
           <img
             alt="Race Director Discord Logo"
             src="https://firebasestorage.googleapis.com/v0/b/race-director.appspot.com/o/assets%2FUntitled_drawing_5.png?alt=media&token=345c31e5-560a-4c51-a81e-b736ecfaa085"
@@ -49,7 +49,7 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
                 href={activity && activity.instant_invite}
                 target={"_blank"}
                 rel="noreferrer"
-                className="bg-[#3fb163] hover:bg-[#2e874a] text-white transition-colors px-6 py-2 text-lg font-black mt-2 rounded-lg"
+                className="mt-2 rounded-lg bg-[#3fb163] px-6 py-2 text-lg font-black text-white transition-colors hover:bg-[#2e874a]"
               >
                 Join
               </a>
@@ -58,11 +58,11 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
         </div>
         <div className="grid gap-2 pt-4">
           <h2 className="text-lg font-semibold text-zinc-200/80">Online</h2>
-          <div className="max-h-48 overflow-y-scroll grid grid-cols-2 gap-2">
+          <div className="grid max-h-48 grid-cols-2 gap-2 overflow-y-scroll">
             {activity &&
               activity.members.map((user: any) => {
                 return (
-                  <div key={user.id} className="flex space-x-2 items-center">
+                  <div key={user.id} className="flex items-center space-x-2">
                     <div className="relative">
                       <img
                         src={user.avatar_url}
@@ -72,14 +72,14 @@ const DiscordActivity: React.FC<DiscordActivityProps> = ({ apiUrl }) => {
                         alt="Discord avatar"
                       ></img>
                       <div
-                        className={`absolute h-2 w-2 rounded-full top-6 right-0 ${
+                        className={`absolute top-6 right-0 h-2 w-2 rounded-full ${
                           user.status === "online"
                             ? "bg-green-400"
                             : "bg-orange-400"
                         } `}
                       ></div>
                     </div>
-                    <p className="text-zinc-200/70 text-sm">{user.username}</p>
+                    <p className="text-sm text-zinc-200/70">{user.username}</p>
                   </div>
                 );
               })}

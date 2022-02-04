@@ -93,7 +93,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
   return (
     <div className="not-prose grid gap-8">
       <div className="grid gap-4">
-        <h2 className="text-xl md:text-2xl font-bold">Join in</h2>
+        <h2 className="text-xl font-bold md:text-2xl">Join in</h2>
         <div className="flex">
           <input
             disabled={!user}
@@ -105,12 +105,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
               }
             }}
             placeholder={user ? "Add a comment..." : "Login to comment"}
-            className="w-full px-2 py-2 disabled:opacity-60 disabled:cursor-not-allowed bg-transparent border dark:border-zinc-200/60 border-zinc-400/60 rounded-md flex-1 mr-2"
+            className="mr-2 w-full flex-1 rounded-md border border-zinc-400/60 bg-transparent px-2 py-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-200/60"
           ></input>
           <button
             onClick={submitComment}
             disabled={!commentContent || !user}
-            className={`px-4 font-semibold dark:bg-cyan-600 bg-cyan-500 hover:bg-cyan-600 text-zinc-100 dark:hover:bg-cyan-700 rounded-md transform transition-all active:scale-95 disabled:opacity-60 disabled:hover:bg-cyan-500 dark:disabled:hover:bg-cyan-600 disabled:cursor-not-allowed`}
+            className={`transform rounded-md bg-cyan-500 px-4 font-semibold text-zinc-100 transition-all hover:bg-cyan-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-cyan-500 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:disabled:hover:bg-cyan-600`}
           >
             Send
           </button>
@@ -118,7 +118,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
       </div>
 
       <div className="grid gap-2" id="comments">
-        <h2 className="text-xl md:text-2xl font-bold">
+        <h2 className="text-xl font-bold md:text-2xl">
           Comments ({localCommentCount})
         </h2>
         <div className="grid">
@@ -135,7 +135,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
         )}
         {!(comments.length >= localCommentCount) && (
           <button
-            className="py-2 px-4 border-zinc-200/70 border-2 rounded-md font-semibold transform active:scale-95 transition-all"
+            className="transform rounded-md border-2 border-zinc-200/70 py-2 px-4 font-semibold transition-all active:scale-95"
             onClick={() => loadMore(lastDoc)}
           >
             Load more comments

@@ -45,10 +45,10 @@ const PostCard: React.FC<PostCardProps> = ({
   }, [timesIntersected]);
 
   return (
-    <div className="shadow-lg overflow-hidden rounded-md" id={post.id}>
+    <div className="overflow-hidden rounded-md shadow-lg" id={post.id}>
       <Link href={`/p/${post.id}`}>
         <a>
-          <div className="aspect-video relative bg-black">
+          <div className="relative aspect-video bg-black">
             <Image
               priority={priority}
               src={post.coverImage.coverImageUrl}

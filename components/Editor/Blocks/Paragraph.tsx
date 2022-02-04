@@ -45,7 +45,7 @@ const Paragraph: React.FC<ParagraphProps> = ({
     <textarea
       placeholder="Write something incredible"
       ref={blockRef}
-      className="bg-transparent border border-zinc-200 text-zinc-200 pt-3 pb-2 px-4 h-24 rounded-md focus:ring ring-blue-200"
+      className="h-24 rounded-md border border-zinc-200 bg-transparent px-4 pt-3 pb-2 text-zinc-200 ring-blue-200 focus:ring"
       onKeyDown={handleKeyPress}
       onChange={handleChange}
       value={state.content[idx].text}

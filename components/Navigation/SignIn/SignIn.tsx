@@ -106,7 +106,7 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
           <Backdrop onClick={() => setState(null)}>
             <Modal>
               <div className="p-8">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <div className="flex space-x-4">
                     <div
                       className="relative cursor-pointer"
@@ -116,7 +116,7 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                       {state === "signup" && (
                         <motion.div
                           layoutId="sign-in-selector"
-                          className="h-0.5 w-full absolute top-full bg-red-500"
+                          className="absolute top-full h-0.5 w-full bg-red-500"
                         ></motion.div>
                       )}
                     </div>
@@ -128,7 +128,7 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                       {state === "login" && (
                         <motion.div
                           layoutId="sign-in-selector"
-                          className="h-0.5 w-full absolute top-full bg-red-500"
+                          className="absolute top-full h-0.5 w-full bg-red-500"
                         ></motion.div>
                       )}
                     </div>
@@ -141,14 +141,14 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                       viewBox="0 0 24 24"
                       width="24px"
                       fill="#000000"
-                      className="fill-zinc-200 h-8 w-8 cursor-pointer hover:scale-110 active:scale-90 transform transition-transform"
+                      className="h-8 w-8 transform cursor-pointer fill-zinc-200 transition-transform hover:scale-110 active:scale-90"
                     >
                       <path d="M0 0h24v24H0V0z" fill="none" />
                       <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
                     </svg>
                   </div>
                 </div>
-                <div className="pt-6 pb-2 grid gap-3">
+                <div className="grid gap-3 pt-6 pb-2">
                   <p className="text-zinc-200">
                     {state === "signup"
                       ? "Join the Race Director community!"
@@ -157,11 +157,11 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                   <div className="grid gap-2 pt-2">
                     {state === "signup" && (
                       <div className="grid gap-0.5">
-                        <label className="font-base text-zinc-200/80 text-sm">
+                        <label className="font-base text-sm text-zinc-200/80">
                           Username
                         </label>
                         <input
-                          className="w-full p-2 rounded-lg bg-zinc-700"
+                          className="w-full rounded-lg bg-zinc-700 p-2"
                           type="text"
                           placeholder=""
                           value={username}
@@ -172,16 +172,16 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                     <div
                       className={`${
                         state === "signup"
-                          ? "grid sm:grid-cols-2 grid-cols-1 gap-2"
+                          ? "grid grid-cols-1 gap-2 sm:grid-cols-2"
                           : "grid gap-2"
                       }`}
                     >
                       <div className="grid gap-0.5">
-                        <label className="font-base text-zinc-200/80 text-sm">
+                        <label className="font-base text-sm text-zinc-200/80">
                           Email
                         </label>
                         <input
-                          className="w-full p-2 rounded-lg bg-zinc-700"
+                          className="w-full rounded-lg bg-zinc-700 p-2"
                           type="email"
                           placeholder=""
                           value={email}
@@ -189,11 +189,11 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                         />
                       </div>
                       <div>
-                        <label className="font-base text-zinc-200/80 text-sm">
+                        <label className="font-base text-sm text-zinc-200/80">
                           Password
                         </label>
                         <input
-                          className="w-full p-2 rounded-lg bg-zinc-700"
+                          className="w-full rounded-lg bg-zinc-700 p-2"
                           type="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -215,16 +215,16 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 pt-1">
+                  <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
                     <button
                       onClick={close}
-                      className="bg-zinc-700 hover:bg-zinc-600 active:scale-90 transform transition-all py-2 uppercase font-bold text- rounded-md"
+                      className="text- transform rounded-md bg-zinc-700 py-2 font-bold uppercase transition-all hover:bg-zinc-600 active:scale-90"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={state === "signup" ? signUp : signIn}
-                      className="bg-red-600 text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                      className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90"
                     >
                       {state === "signup" ? "Signup" : "Login"}
                     </button>

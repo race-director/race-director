@@ -41,7 +41,7 @@ const Quote: React.FC<QuoteProps> = ({ editorState, idx }) => {
       onKeyDown={handleKeyPress}
       onChange={handleChange}
       value={state.content[idx].text}
-      className="bg-transparent border italic border-zinc-200 text-zinc-200 pt-3 pb-2 px-4 h-24 rounded-md focus:ring ring-blue-200"
+      className="h-24 rounded-md border border-zinc-200 bg-transparent px-4 pt-3 pb-2 italic text-zinc-200 ring-blue-200 focus:ring"
       placeholder="Write a quote"
     ></textarea>
   );

@@ -10,13 +10,13 @@ const NewPostPage: React.FC<NewPostPageProps> = () => {
   const [user] = useContext(Auth);
 
   return (
-    <div className="dark:bg-zinc-900 min-h-screen w-full flex items-center flex-col">
+    <div className="flex min-h-screen w-full flex-col items-center dark:bg-zinc-900">
       <Head>
         <title>Race Director - Studio</title>
       </Head>
       <Navigation></Navigation>
       {user && (
-        <div className="w-full max-w-5xl pt-12 px-4">
+        <div className="w-full max-w-5xl px-4 pt-12">
           <Editor></Editor>
         </div>
       )}

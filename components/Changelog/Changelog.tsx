@@ -27,8 +27,8 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
       {isShown && (
         <Backdrop onClick={() => {}}>
           <Modal>
-            <div className="p-8 grid gap-4">
-              <h1 className="text-2xl text-zinc-200/90 font-bold uppercase">
+            <div className="grid gap-4 p-8">
+              <h1 className="text-2xl font-bold uppercase text-zinc-200/90">
                 Welcome to the Race Director beta!
               </h1>
               <div className="max-h-96 overflow-y-scroll py-3" ref={scrollRef}>
@@ -47,7 +47,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                   </p>
                 </div>
                 <div className="grid gap-3 pt-4">
-                  <h2 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  <h2 className="text-xl font-bold uppercase text-zinc-200/90">
                     Things you should know
                   </h2>
                   <p className="text-zinc-200/70">
@@ -69,7 +69,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                   </p>
                 </div>
                 <div className="grid gap-3 pt-4">
-                  <h2 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  <h2 className="text-xl font-bold uppercase text-zinc-200/90">
                     Contributing
                   </h2>
                   <p className="text-zinc-200/70">
@@ -99,7 +99,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
                   </p>
                 </div>
                 <div className="grid gap-3 pt-4">
-                  <h2 className="text-xl text-zinc-200/90 font-bold uppercase">
+                  <h2 className="text-xl font-bold uppercase text-zinc-200/90">
                     Contact
                   </h2>
                   <p className="text-zinc-200/70">
@@ -118,7 +118,7 @@ const ChangeLog: React.FC<ChangeLogProps> = () => {
               <div className="grid grid-cols-1 gap-2 pt-2 text-zinc-200">
                 <button
                   onClick={closeChangelog}
-                  className="bg-red-600 disabled:opacity-60 disabled:hover:bg-red-600 disabled:cursor-not-allowed text-center hover:bg-red-700 active:scale-90 transform transition-all py-2 uppercase font-bold rounded-md"
+                  className="transform rounded-md bg-red-600 py-2 text-center font-bold uppercase transition-all hover:bg-red-700 active:scale-90 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-red-600"
                 >
                   I have read, and agree to the terms
                 </button>

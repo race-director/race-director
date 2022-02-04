@@ -10,17 +10,17 @@ const ServerError: React.FC<ServerErrorProps> = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center min-h-screen dark:bg-zinc-900 pb-12">
+    <div className="flex min-h-screen flex-col items-center pb-12 dark:bg-zinc-900">
       <Head>
         <title>Race Director - Server Error</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* <Navigation></Navigation> */}
-      <div className="max-w-screen-2xl w-full flex flex-col space-y-8 items-center justify-center pt-32 px-4">
-        <div className="text-base md:text-2xl font-bold tracking-tighter text-zinc-900/80 dark:text-zinc-100 border-2 dark:border-zinc-50 border-zinc-900/80 px-2 py-1 rounded-sm">
+      <div className="flex w-full max-w-screen-2xl flex-col items-center justify-center space-y-8 px-4 pt-32">
+        <div className="rounded-sm border-2 border-zinc-900/80 px-2 py-1 text-base font-bold tracking-tighter text-zinc-900/80 dark:border-zinc-50 dark:text-zinc-100 md:text-2xl">
           Race Director
         </div>
-        <h1 className="text-3xl md:text-4xl font-black text-zinc-200 text-center">
+        <h1 className="text-center text-3xl font-black text-zinc-200 md:text-4xl">
           (500) <br /> The server is currently shut down because of the database
           quota being reached. Quota renews daily, so check again in a couple of
           hours.
