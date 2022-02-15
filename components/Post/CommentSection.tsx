@@ -35,6 +35,24 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
     loadMore();
   }, []);
 
+  useEffect(() => {
+    // Text area resizing
+    // see https://stackoverflow.com/questions/454202/creating-a-textarea-with-auto-resize
+    const tx = document.getElementsByTagName("textarea");
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute(
+        "style",
+        "height:" + tx[i].scrollHeight + "px;overflow-y:hidden;"
+      );
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput(this: any) {
+      this.style.height = "auto";
+      this.style.height = this.scrollHeight + "px";
+    }
+  });
+
   const loadMore = (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
     const postCollection = collection(db, `posts/${post.id}/comments`);
     const orderPostsBy = orderBy("createdAt", "desc");
@@ -95,8 +113,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
       <div className="grid gap-4">
         <h2 className="text-xl font-bold md:text-2xl">Join in</h2>
         <div className="flex">
-          <input
-            disabled={!user}
+          <textarea
+            wrap="hard"
+            disabled={(user && !user) || false}
             value={commentContent}
             onChange={(e) => setCommentContent(e.target.value)}
             onKeyDown={(e) => {
@@ -105,8 +124,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
               }
             }}
             placeholder={user ? "Add a comment..." : "Login to comment"}
-            className="mr-2 w-full flex-1 rounded-md border border-zinc-400/60 bg-transparent px-2 py-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-200/60"
-          ></input>
+            className="mr-2 w-full flex-1 resize-none rounded-md border border-zinc-400/60 bg-transparent px-2 py-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-200/60"
+          ></textarea>
           <button
             onClick={submitComment}
             disabled={!commentContent || !user}
