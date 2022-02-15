@@ -115,7 +115,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
         <div className="flex">
           <textarea
             wrap="hard"
-            disabled={(user && !user) || false}
+            disabled={!user}
             value={commentContent}
             onChange={(e) => setCommentContent(e.target.value)}
             onKeyDown={(e) => {
