@@ -78,11 +78,13 @@ const PostCard: React.FC<PostCardProps> = ({
           </div>
           {showAuthor && (
             <div className="flex items-center space-x-2">
-              <p className="font-semibold uppercase text-zinc-200/90">
-                {authorDataLoading
-                  ? "Loading..."
-                  : `By ${authorData?.displayName}`}
-              </p>
+              <Link href={`/u/${authorData?.uid}`}>
+                <a className="font-semibold uppercase text-zinc-200/90">
+                  {authorDataLoading
+                    ? "Loading..."
+                    : `By ${authorData?.displayName}`}
+                </a>
+              </Link>
             </div>
           )}
         </div>
