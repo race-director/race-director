@@ -153,6 +153,7 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
                 if (idx >= 3)
                   return (
                     <PostCard
+                      showAuthor
                       isLast={idx === posts.length - 1}
                       href={`${host}p/${p.id}`}
                       post={p}

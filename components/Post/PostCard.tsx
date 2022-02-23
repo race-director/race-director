@@ -1,8 +1,11 @@
+import { doc, getFirestore } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import { CommentPostButton, LikePostButton, SharePostButton } from ".";
 import { post } from "../../types";
+import { firebaseApp } from "../../utils/firebase";
 
 interface PostCardProps {
   post: post;
@@ -10,16 +13,22 @@ interface PostCardProps {
   isLast: boolean;
   loadMore?: () => void;
   priority?: boolean;
+  showAuthor?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
+  showAuthor,
   priority,
   post,
   href,
   isLast,
   loadMore,
 }) => {
+  const db = getFirestore(firebaseApp);
   const [timesIntersected, setTimesIntersected] = useState<number>(0);
+  const [authorData, authorDataLoading] = useDocumentDataOnce(
+    showAuthor ? doc(db, "users", post.metadata.author) : null
+  );
 
   useEffect(() => {
     if (loadMore) {
@@ -60,10 +69,25 @@ const PostCard: React.FC<PostCardProps> = ({
         </a>
       </Link>
       <div className="bg-zinc-800 px-4 py-4">
-        <h2 className="text-xl font-bold uppercase text-zinc-200/90">
-          {post.metadata.headline}
-        </h2>
-        <p className="text-zinc-200/70">{post.metadata.summary}</p>
+        <div className="flex flex-col space-y-2">
+          <div>
+            <h2 className="text-xl font-bold uppercase text-zinc-200/90">
+              {post.metadata.headline}
+            </h2>
+            <p className="text-zinc-200/70">{post.metadata.summary}</p>
+          </div>
+          {showAuthor && (
+            <div className="flex items-center space-x-2">
+              <Link href={`/u/${authorData?.uid}`}>
+                <a className="font-semibold uppercase text-zinc-200/90">
+                  {authorDataLoading
+                    ? "Loading..."
+                    : `By ${authorData?.displayName}`}
+                </a>
+              </Link>
+            </div>
+          )}
+        </div>
         <div className="grid grid-cols-3 justify-between gap-2 pt-4">
           <LikePostButton post={post}></LikePostButton>
           <CommentPostButton
