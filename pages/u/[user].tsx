@@ -1,12 +1,15 @@
 import {
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
   getFirestore,
+  increment,
   limit,
   orderBy,
   QueryDocumentSnapshot,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { AnimatePresence } from "framer-motion";
@@ -14,10 +17,12 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Backdrop, Modal } from "../../components/Menus";
 import { Navigation } from "../../components/Navigation";
 import { PostCard } from "../../components/Post";
 import { post, user } from "../../types";
+import { follower, following } from "../../types/followers";
 import { firebaseApp, paginateQuery } from "../../utils/firebase";
 import { Auth } from "../_app";
 
@@ -28,18 +33,31 @@ interface UserPageProps {
 
 // TODO: pagination
 const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
+  const [localFollowingCount, setLocalFollowingCount] = useState<number>(
+    userData?.following || 0
+  );
+  const [localFollowerCount, setLocalFollowerCount] = useState<number>(
+    userData?.following || 0
+  );
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [user] = useContext(Auth);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [posts, setPosts] = useState<post[]>([]);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData>>();
 
+  const db = getFirestore(firebaseApp);
+  const isFollowingDoc = doc(
+    db,
+    "users",
+    `${userData?.uid}/followers/${user?.uid}`
+  );
+  const [isFollowing, isFollowingLoading] = useDocumentData(isFollowingDoc);
+
   useEffect(() => {
     loadMore();
   }, []);
 
   const loadMore = async (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
-    const db = getFirestore(firebaseApp);
     const postCollection = collection(db, "posts");
     const orderPostsBy = orderBy("metadata.createdAt", "desc");
     const wherePosts = where("metadata.author", "==", userData?.uid);
@@ -70,12 +88,51 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
   };
 
   useEffect(() => {
+    setLocalFollowerCount(userData?.followers || 0);
+    setLocalFollowingCount(userData?.following || 0);
+
     if (user) {
       setIsOwnProfile(user.uid === userData?.uid);
     } else {
       setIsOwnProfile(false);
     }
-  }, [user]);
+  }, [userData, user]);
+
+  const handleFollow = () => {
+    const currentUserDoc = doc(db, "users", userData?.uid || "");
+    const currentAuthDoc = doc(db, "users", user?.uid || "");
+    const followingDoc = doc(
+      db,
+      "users",
+      `${user?.uid}/following/${userData?.uid}`
+    );
+
+    if (!!isFollowing) {
+      // Unfollow
+      deleteDoc(followingDoc);
+      deleteDoc(isFollowingDoc);
+      setDoc(currentUserDoc, { followers: increment(-1) }, { merge: true });
+      setDoc(currentAuthDoc, { following: increment(-1) }, { merge: true });
+      setLocalFollowerCount(localFollowerCount - 1);
+    } else {
+      // Follow
+      setDoc(followingDoc, {
+        createdAt: new Date().getTime(),
+        userId: userData?.uid,
+      } as following);
+      setDoc(isFollowingDoc, {
+        createdAt: new Date().getTime(),
+        userId: user?.uid,
+      } as follower);
+      setDoc(currentUserDoc, { followers: increment(1) }, { merge: true });
+      setDoc(currentAuthDoc, { following: increment(1) }, { merge: true });
+      setLocalFollowerCount(localFollowerCount + 1);
+    }
+  };
+
+  // const handleEditProfile = () => {
+  //   console.log("edit");
+  // };
 
   return (
     <div>
@@ -135,10 +192,20 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
               </p>
               <div className="flex space-x-2 pt-2">
                 <button
-                  onClick={() => setIsEditOpen(true)}
+                  onClick={
+                    isOwnProfile ? () => setIsEditOpen(true) : handleFollow
+                  }
                   className="transform rounded-md bg-red-600 px-6 py-1 font-bold uppercase text-zinc-200 transition-all hover:bg-red-700 active:scale-95 disabled:cursor-not-allowed"
                 >
-                  {isOwnProfile ? "Edit Profile" : "Follow"}
+                  {isOwnProfile
+                    ? "Edit Profile"
+                    : `${
+                        !isFollowingLoading
+                          ? !!isFollowing
+                            ? "Unfollow"
+                            : "Follow"
+                          : "Loading"
+                      }`}
                 </button>
               </div>
             </div>
@@ -146,13 +213,13 @@ const UserPage: React.FC<UserPageProps> = ({ userData, host }) => {
               <div>
                 <p className="text-sm uppercase text-zinc-200/80">Following</p>
                 <p className="text-lg font-bold text-zinc-200">
-                  {userData?.following}
+                  {localFollowingCount}
                 </p>
               </div>
               <div>
-                <p className="text-sm uppercase text-zinc-200/80">Following</p>
+                <p className="text-sm uppercase text-zinc-200/80">Followers</p>
                 <p className="text-lg font-bold text-zinc-200">
-                  {userData?.following}
+                  {localFollowerCount}
                 </p>
               </div>
             </div>
