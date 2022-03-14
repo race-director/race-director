@@ -58,7 +58,7 @@ const submitPost = async (editorState: editorContent, user: user) => {
         shareCount: 0,
         viewCount: 0,
       },
-      score: 0,
+      score: 1, // Changed to 1 to get new posts to the top | should be changed to 0 later
     };
 
     // Upload post to the db
