@@ -59,7 +59,7 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
   const signUp = async () => {
     const auth = getAuth(firebaseApp);
     try {
-      if (process.env.NODE_ENV === "development") {
+      // if (process.env.NODE_ENV === "development") {
         if (username && email && password) {
           const { user } = await createUserWithEmailAndPassword(
             auth,
@@ -89,11 +89,11 @@ const SignIn: React.FC<SignInProps> = ({ signInState }) => {
             throw new Error("Race Director: Password is required");
           }
         }
-      } else {
-        throw new Error(
-          "Race Director is on invite-only mode. Contact me for an invite."
-        );
-      }
+      // } else {
+      //   throw new Error(
+      //     "Race Director is on invite-only mode. Contact me for an invite."
+      //   );
+      // }
     } catch (error) {
       setError(error as FirebaseError);
     }
