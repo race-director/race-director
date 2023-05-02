@@ -32,7 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
   const loadMore = async (lastDoc?: QueryDocumentSnapshot<DocumentData>) => {
     const db = getFirestore(firebaseApp);
     const postCollection = collection(db, "posts");
-    const orderPostsBy = orderBy("score", "desc");
+    const orderPostsBy = orderBy("metadata.createdAt", "desc");
     const queryLimit = limit(5);
     if (lastDoc) {
       paginateQuery(postCollection, [orderPostsBy, queryLimit], lastDoc).then(
@@ -58,6 +58,7 @@ const HomePage: React.FC<HomePageProps> = ({ host }) => {
       <Head>
         <title>Race Director</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="sitemap" href="/sitemap.xml"></link>
       </Head>
       <Navigation></Navigation>
       <div className="flex w-full max-w-screen-2xl flex-col">
